@@ -4,7 +4,8 @@ using ThePlant.EF;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-
+ThePlant.EF.Services.DependencyRegistration.RegisterDependency(builder.Services, builder.Configuration);
+ThePlant.API.Services.DependencyRegistration.RegisterDependency(builder.Services, builder.Configuration);
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
