@@ -33,4 +33,6 @@ app.UseAuthentication();
 app.UseAuthorization();
 app.UseAntiforgery();
 
+app.MapControllers();
+
 app.Run();
