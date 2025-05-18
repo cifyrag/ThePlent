@@ -51,7 +51,7 @@ namespace ThePlant.API.Controllers
         /// <param name="id">The identifier of the plant overview.</param>
         /// <returns>An ActionResult containing the overview object or a 404 Not Found.</returns>
         [HttpGet("{id}")]
-        public async Task<ActionResult<PlantOverview>> GetPlant_Overview(int id)
+        public async Task<ActionResult<PlantOverview>> GetPlant_Overview(Guid id)
         {
             var result = await _plantOverviewService.GetPlant_Overview(id);
 
@@ -69,7 +69,7 @@ namespace ThePlant.API.Controllers
         /// <param name="id">The identifier of the plant overview to delete.</param>
         /// <returns>An ActionResult indicating success or failure.</returns>
         [HttpDelete("{id}")]
-        public async Task<ActionResult> DeletePlant_Overview(int id)
+        public async Task<ActionResult> DeletePlant_Overview(Guid id)
         {
             var result = await _plantOverviewService.DeletePlant_Overview(id);
 

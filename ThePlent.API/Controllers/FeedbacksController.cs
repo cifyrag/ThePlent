@@ -51,7 +51,7 @@ namespace ThePlant.API.Controllers
         /// <param name="id">The identifier of the feedback.</param>
         /// <returns>An ActionResult containing the feedback object or a 404 Not Found.</returns>
         [HttpGet("{id}")]
-        public async Task<ActionResult<Feedback>> GetFeedBack(int id)
+        public async Task<ActionResult<Feedback>> GetFeedBack(Guid id)
         {
             var result = await _feedbacksService.GetFeedBack(id);
 

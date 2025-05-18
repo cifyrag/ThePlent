@@ -16,7 +16,7 @@ public interface IFeedBacksService
     /// </summary>
     /// <param name="id">The identifier of the feedback.</param>
     /// <returns>The feedback object, or null if not found.</returns>
-    Task<Result<Feedback>> GetFeedBack(int id); 
+    Task<Result<Feedback>> GetFeedBack(Guid id); 
 
     /// <summary>
     /// Gets a collection of feedback entries.

@@ -50,7 +50,7 @@ namespace ThePlant.API.Controllers
         /// <param name="id">The identifier of the care instruction or the plant.</param>
         /// <returns>An ActionResult containing the instruction object or a 404 Not Found.</returns>
         [HttpGet("{id}")]
-        public async Task<ActionResult<PlantCareInstruction>> GetCareInstruction(int id)
+        public async Task<ActionResult<PlantCareInstruction>> GetCareInstruction(Guid id)
         {
             var result = await _plantCareInstructionsService.GetCareInstruction(id);
 
@@ -91,7 +91,7 @@ namespace ThePlant.API.Controllers
         /// <param name="id">The identifier of the care instruction to remove.</param>
         /// <returns>An ActionResult indicating success or failure.</returns>
         [HttpDelete("{id}")]
-        public async Task<ActionResult> RemoveCareInstruction(int id)
+        public async Task<ActionResult> RemoveCareInstruction(Guid id)
         {
             var result = await _plantCareInstructionsService.RemoveCareInstruction(id);
 

@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using ThePlant.API.Services.Interfaces;
 using ThePlant.EF.Models;
+using ThePlant.EF.Models.Enam;
 using ThePlant.EF.Utils;
 
 namespace ThePlant.API.Controllers
@@ -98,9 +99,9 @@ namespace ThePlant.API.Controllers
         /// <param name="userId">The identifier of the user (from route).</param>
         /// <returns>An ActionResult containing the User object or a 404 Not Found.</returns>
         [HttpGet("{userId}")] // GET api/User/{userId}
-        public async Task<ActionResult<User>> GetUser(int userId)
+        public async Task<ActionResult<User>> GetUser(Guid userId)
         {
-            if (userId <= 0)
+            if (userId.Equals(Guid.Empty))
             {
                 return BadRequest("Valid user ID is required.");
             }
@@ -122,9 +123,9 @@ namespace ThePlant.API.Controllers
         /// <param name="languageRequest">Object containing the language code (from body).</param>
         /// <returns>An ActionResult indicating success or failure.</returns>
         [HttpPost("{userId}/language")] // POST api/User/{userId}/language
-        public async Task<ActionResult<Success>> ChooseLanguage(int userId, [FromBody] ChooseLanguageRequest languageRequest)
+        public async Task<ActionResult<Success>> ChooseLanguage(Guid userId, [FromBody] ChooseLanguageRequest languageRequest)
         {
-            if (userId <= 0 || languageRequest == null || string.IsNullOrEmpty(languageRequest.LanguageCode))
+            if ( languageRequest == null )
             {
                 return BadRequest("Valid user ID and language code are required.");
             }
@@ -169,9 +170,9 @@ namespace ThePlant.API.Controllers
         /// <param name="notificationRequest">Object containing the allow flag (from body).</param>
         /// <returns>An ActionResult indicating success or failure.</returns>
         [HttpPost("{userId}/notifications")] // POST api/User/{userId}/notifications
-        public async Task<ActionResult<Success>> AllowNotifications(int userId, [FromBody] AllowNotificationsRequest notificationRequest)
+        public async Task<ActionResult<Success>> AllowNotifications(Guid userId, [FromBody] AllowNotificationsRequest notificationRequest)
         {
-            if (userId <= 0 || notificationRequest == null)
+            if ( notificationRequest == null)
             {
                 return BadRequest("Valid user ID and notification preference are required.");
             }
@@ -221,7 +222,7 @@ namespace ThePlant.API.Controllers
             /// <summary>
             /// The code for the chosen language.
             /// </summary>
-            public string LanguageCode { get; set; }
+            public Language LanguageCode { get; set; }
         }
 
         /// <summary>

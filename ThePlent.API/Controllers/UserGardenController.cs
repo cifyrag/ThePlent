@@ -30,7 +30,7 @@ namespace ThePlant.API.Controllers
         [HttpPost] // POST api/UserGarden
         public async Task<ActionResult<UserPlant>> AddUserPlant([FromBody] AddUserPlantRequest addPlantRequest)
         {
-            if (addPlantRequest == null || addPlantRequest.UserId <= 0 || addPlantRequest.PlantId <= 0)
+            if (addPlantRequest == null )
             {
                 return BadRequest("Valid user ID and plant ID are required to add a plant to the garden.");
             }
@@ -68,7 +68,7 @@ namespace ThePlant.API.Controllers
         /// <param name="id">The identifier of the user's plant entry to delete (from route).</param>
         /// <returns>An ActionResult indicating success or failure.</returns>
         [HttpDelete("{id}")] // DELETE api/UserGarden/{id}
-        public async Task<ActionResult> DeleteUserPlant(int id)
+        public async Task<ActionResult> DeleteUserPlant(Guid id)
         {
             var result = await _userGardenService.DeleteUserPlant(id);
 
@@ -87,7 +87,7 @@ namespace ThePlant.API.Controllers
         /// <param name="renameRequest">Object containing the new custom name (from body).</param>
         /// <returns>An ActionResult indicating success or failure.</returns>
         [HttpPost("{id}/rename")] // POST api/UserGarden/{id}/rename
-        public async Task<ActionResult> RenameUserPlant(int id, [FromBody] RenameUserPlantRequest renameRequest)
+        public async Task<ActionResult> RenameUserPlant(Guid id, [FromBody] RenameUserPlantRequest renameRequest)
         {
             if (renameRequest == null || string.IsNullOrEmpty(renameRequest.NewName))
             {
@@ -134,7 +134,7 @@ namespace ThePlant.API.Controllers
         /// <param name="updateNameRequest">Object containing the new custom name (from body).</param>
         /// <returns>An ActionResult indicating success or failure.</returns>
         [HttpPut("{id}/name")] // PUT api/UserGarden/{id}/name
-        public async Task<ActionResult> UpdateUserPlantName(int id, [FromBody] UpdateUserPlantNameRequest updateNameRequest)
+        public async Task<ActionResult> UpdateUserPlantName(Guid id, [FromBody] UpdateUserPlantNameRequest updateNameRequest)
         {
             if (updateNameRequest == null || string.IsNullOrEmpty(updateNameRequest.NewName))
             {
@@ -159,12 +159,12 @@ namespace ThePlant.API.Controllers
             /// <summary>
             /// The identifier of the user.
             /// </summary>
-            public int UserId { get; set; }
+            public Guid UserId { get; set; }
 
             /// <summary>
             /// The identifier of the plant to add.
             /// </summary>
-            public int PlantId { get; set; }
+            public Guid PlantId { get; set; }
         }
 
         /// <summary>
