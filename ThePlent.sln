@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.13.35818.85
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ThePlent.API", "ThePlent.API\ThePlent.API.csproj", "{46659921-099C-4464-9984-78C8D869BAE9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ThePlant.EF", "ThePlant.EF\ThePlant.EF.csproj", "{BA1455CD-5556-49D0-9924-8D5A5F40AF0C}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{46659921-099C-4464-9984-78C8D869BAE9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{46659921-099C-4464-9984-78C8D869BAE9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{46659921-099C-4464-9984-78C8D869BAE9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{46659921-099C-4464-9984-78C8D869BAE9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BA1455CD-5556-49D0-9924-8D5A5F40AF0C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BA1455CD-5556-49D0-9924-8D5A5F40AF0C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BA1455CD-5556-49D0-9924-8D5A5F40AF0C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BA1455CD-5556-49D0-9924-8D5A5F40AF0C}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {688A1341-FAC3-4B68-AB48-9550D115FB05}
+	EndGlobalSection
+EndGlobal
