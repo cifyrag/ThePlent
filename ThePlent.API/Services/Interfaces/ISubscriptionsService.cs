@@ -10,7 +10,7 @@ public interface ISubscriptionsService
     /// </summary>
     /// <param name="userId">The identifier of the user.</param>
     /// <returns>The expiration date of the subscription, or null if no active subscription is found.</returns>
-    Task<Result<DateTime?>> CheckExpirationDate(int userId);
+    Task<Result<DateTime?>> CheckExpirationDate(Guid userId);
 
     /// <summary>
     /// Adds a new subscription for a user.
@@ -25,13 +25,13 @@ public interface ISubscriptionsService
     /// <param name="userId">The identifier of the user.</param>
     /// <param name="planId">The identifier of the subscription plan.</param>
     /// <returns>True if the subscription was successful, false otherwise.</returns>
-    Task<Result<bool>> Subscribe(int userId, int planId);
+    Task<Result<bool>> Subscribe(Guid userId, Guid planId);
 
     /// <summary>
     /// Cancels an existing subscription.
     /// </summary>
     /// <param name="subscriptionId">The identifier of the subscription to cancel.</param>
     /// <returns>True if the cancellation was successful, false otherwise.</returns>
-    Task<Result< bool>> CancelSubscription(int subscriptionId);
+    Task<Result< bool>> CancelSubscription(Guid subscriptionId);
 }
 

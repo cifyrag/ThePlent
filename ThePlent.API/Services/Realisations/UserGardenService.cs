@@ -13,7 +13,7 @@ public class UserGardenService: ІUserGardenService
     {
         _logger = logger;
     }
-    public async Task<Result<UserPlant>> AddUserPlant(int userId, int plantId)
+    public async Task<Result<UserPlant>> AddUserPlant(Guid userId, Guid plantId)
     {
          try
          {
@@ -27,7 +27,7 @@ public class UserGardenService: ІUserGardenService
          }
     }
 
-    public async Task<Result<bool>> DeleteUserPlant(int userPlantId)
+    public async Task<Result<bool>> DeleteUserPlant(Guid userPlantId)
     {
          try
         {
@@ -40,8 +40,8 @@ public class UserGardenService: ІUserGardenService
             return Error.Unexpected();
         }
     }
-
-    public async Task<Result<bool>> RenameUserPlant(int userPlantId, string newName)
+    
+    public async Task<Result<bool>> RenameUserPlant(Guid userPlantId, string newName)
     {
          try
          {
@@ -69,7 +69,7 @@ public class UserGardenService: ІUserGardenService
          }
     }
 
-    public async Task<Result<bool>> UpdateUserPlantName(int userPlantId, string newName)
+    public async Task<Result<bool>> UpdateUserPlantName(Guid userPlantId, string newName)
     {
          try
          {

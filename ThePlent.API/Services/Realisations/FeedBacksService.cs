@@ -27,7 +27,7 @@ public class FeedBacksService: IFeedBacksService
         }
     }
 
-    public async Task<Result<Feedback>> GetFeedBack(int id)
+    public async Task<Result<Feedback>> GetFeedBack(Guid id)
     {
          try
         {

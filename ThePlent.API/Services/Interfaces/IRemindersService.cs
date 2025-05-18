@@ -11,7 +11,7 @@ public interface IRemindersService
         /// <param name="userId">The identifier of the user.</param>
         /// <param name="reminderId">The identifier of the reminder to mark as done.</param>
         /// <returns>True if the reminder was marked as done successfully, false otherwise.</returns>
-        Task<Result<bool>> MarkAsDone(int userId, int reminderId); 
+        Task<Result<bool>> MarkAsDone(Guid userId, Guid reminderId); 
     
         /// <summary>
         /// Imports a reminder to a user's calendar.
@@ -20,14 +20,14 @@ public interface IRemindersService
         /// <param name="reminderId">The identifier of the reminder to import.</param>
         /// <param name="calendarId">The identifier of the calendar to import to (optional).</param>
         /// <returns>True if the import was successful, false otherwise.</returns>
-        Task<Result<bool>> ImportToCalendar(int userId, int reminderId, string calendarId = null); 
+        Task<Result<bool>> ImportToCalendar(Guid userId, Guid reminderId, string calendarId = null); 
         
         /// <summary>
         /// Gets all reminders for a specific user.
         /// </summary>
         /// <param name="userId">The identifier of the user.</param>
         /// <returns>An enumerable collection of Reminder objects for the user.</returns>
-        Task<Result<System.Collections.Generic.IEnumerable<Reminder>>> GetUserReminders(int userId);
+        Task<Result<System.Collections.Generic.IEnumerable<Reminder>>> GetUserReminders(Guid userId);
         
         /// <summary>
         /// Creates a new reminder for a user.
@@ -42,7 +42,7 @@ public interface IRemindersService
         /// <param name="userId">The identifier of the user.</param>
         /// <param name="reminderId">The identifier of the reminder to delete.</param>
         /// <returns>True if the deletion was successful, false otherwise.</returns>
-        Task<Result<bool>> DeleteReminder(int userId, int reminderId); 
+        Task<Result<bool>> DeleteReminder(Guid userId, Guid reminderId); 
         
         /// <summary>
         /// Gets upcoming reminders for a user within a specified timeframe.
@@ -50,7 +50,7 @@ public interface IRemindersService
         /// <param name="userId">The identifier of the user.</param>
         /// <param name="timeframeInDays">The number of upcoming days to check (optional).</param>
         /// <returns>An enumerable collection of upcoming Reminder objects for the user.</returns>
-        Task<Result<System.Collections.Generic.IEnumerable<Reminder>>> GetUpcomingReminders(int userId, int timeframeInDays = 7); 
+        Task<Result<System.Collections.Generic.IEnumerable<Reminder>>> GetUpcomingReminders(Guid userId, int timeframeInDays = 7); 
         
         /// <summary>
         /// Updates an existing reminder.

@@ -27,7 +27,7 @@ public class PlantCareInstructionsService: IPlantCareInstructionsService
         }
     }
 
-    public async Task<Result<PlantCareInstruction>> GetCareInstruction(int id)
+    public async Task<Result<PlantCareInstruction>> GetCareInstruction(Guid id)
     {
          try
         {
@@ -55,7 +55,7 @@ public class PlantCareInstructionsService: IPlantCareInstructionsService
         }
     }
 
-    public async Task<Result<bool>> RemoveCareInstruction(int instructionId)
+    public async Task<Result<bool>> RemoveCareInstruction(Guid instructionId)
     {
          try
         {

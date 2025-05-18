@@ -41,7 +41,7 @@ public class PlantService: IPlantService
         }
     }
 
-    public async Task<Result<Plant>> GetPlant(int plantId)
+    public async Task<Result<Plant>> GetPlant(Guid plantId)
     {
          try
         {
@@ -69,7 +69,7 @@ public class PlantService: IPlantService
         }
     }
 
-    public async Task<Result<bool>> RemovePlant(int plantId)
+    public async Task<Result<bool>> RemovePlant(Guid plantId)
     {
          try
         {
@@ -97,7 +97,7 @@ public class PlantService: IPlantService
         }
     }
 
-    public async Task<Result<PlantCareInstruction>> ViewPlantCareInstructions(int plantId)
+    public async Task<Result<PlantCareInstruction>> ViewPlantCareInstructions(Guid plantId)
     {
          try
         {

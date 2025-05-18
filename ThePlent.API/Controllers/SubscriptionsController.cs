@@ -29,9 +29,9 @@ namespace ThePlant.API.Controllers
         /// <param name="userId">The identifier of the user (from route).</param>
         /// <returns>An ActionResult containing the expiration date or a 404 Not Found.</returns>
         [HttpGet("user/{userId}/expiration")] // GET api/Subscriptions/user/{userId}/expiration
-        public async Task<ActionResult<DateTime?>> CheckExpirationDate(int userId)
+        public async Task<ActionResult<DateTime?>> CheckExpirationDate(Guid userId)
         {
-            if (userId <= 0)
+            if (userId.Equals(Guid.Empty))
             {
                 return BadRequest("Valid user ID is required.");
             }
@@ -105,7 +105,7 @@ namespace ThePlant.API.Controllers
         [HttpPost("subscribe")] // POST api/Subscriptions/subscribe
         public async Task<ActionResult> Subscribe([FromBody] SubscribeRequest subscribeRequest)
         {
-            if (subscribeRequest == null || subscribeRequest.UserId <= 0 || subscribeRequest.PlanId <= 0)
+            if (subscribeRequest == null )
             {
                 return BadRequest("Valid user ID and plan ID are required for subscribing.");
             }
@@ -126,7 +126,7 @@ namespace ThePlant.API.Controllers
         /// <param name="id">The identifier of the subscription to cancel (from route).</param>
         /// <returns>An ActionResult indicating success or failure.</returns>
         [HttpPost("{id}/cancel")] // POST api/Subscriptions/{id}/cancel
-        public async Task<ActionResult> CancelSubscription(int id)
+        public async Task<ActionResult> CancelSubscription(Guid id)
         {
             var result = await _subscriptionsService.CancelSubscription(id);
 
@@ -146,12 +146,12 @@ namespace ThePlant.API.Controllers
             /// <summary>
             /// The identifier of the user.
             /// </summary>
-            public int UserId { get; set; }
+            public Guid UserId { get; set; }
 
             /// <summary>
             /// The identifier of the subscription plan.
             /// </summary>
-            public int PlanId { get; set; }
+            public Guid PlanId { get; set; }
         }
 
          /// <summary>
@@ -162,7 +162,7 @@ namespace ThePlant.API.Controllers
              /// <summary>
             /// The identifier of the subscription to cancel.
             /// </summary>
-            public int SubscriptionId { get; set; }
+            public Guid SubscriptionId { get; set; }
         }
     }
 }

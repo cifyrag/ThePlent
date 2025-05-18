@@ -74,7 +74,7 @@ namespace ThePlant.API.Controllers
         /// <param name="id">The identifier of the plant.</param>
         /// <returns>An ActionResult containing the plant or a 404 Not Found.</returns>
         [HttpGet("{id}")]
-        public async Task<ActionResult<Plant>> GetPlant(int id)
+        public async Task<ActionResult<Plant>> GetPlant(Guid id)
         {
             var result = await _plantService.GetPlant(id);
 
@@ -109,7 +109,7 @@ namespace ThePlant.API.Controllers
         /// <param name="id">The identifier of the plant to remove.</param>
         /// <returns>An ActionResult indicating success or failure.</returns>
         [HttpDelete("{id}")]
-        public async Task<ActionResult> RemovePlant(int id)
+        public async Task<ActionResult> RemovePlant(Guid id)
         {
             var result = await _plantService.RemovePlant(id);
 
@@ -143,8 +143,8 @@ namespace ThePlant.API.Controllers
         /// </summary>
         /// <param name="plantId">The identifier of the plant.</param>
         /// <returns>An ActionResult containing the care instructions or a 404 Not Found.</returns>
-        [HttpGet("{plantId}/careinstructions")] // Route to get care instructions for a specific plant
-        public async Task<ActionResult<PlantCareInstruction>> ViewPlantCareInstructions(int plantId)
+        [HttpGet("{plantId}/careinstructions")] 
+        public async Task<ActionResult<PlantCareInstruction>> ViewPlantCareInstructions(Guid plantId)
         {
             var result = await _plantService.ViewPlantCareInstructions(plantId);
 

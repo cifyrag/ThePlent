@@ -1,9 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using ThePlant.EF.Models;
-using ThePlant.EF.Utils;
 using ThePlant.API.Services.Interfaces;
+using ThePlant.EF.Models;
 
 namespace ThePlant.API.Controllers
 {
@@ -72,10 +69,9 @@ namespace ThePlant.API.Controllers
         /// <summary>
         /// Removes an achievement by its identifier.
         /// </summary>
-        /// <param name="id">The identifier of the achievement to remove.</param>
         /// <returns>An ActionResult indicating success or failure.</returns>
         [HttpDelete("{id}")]
-        public async Task<ActionResult> RemoveAchievement(int id)
+        public async Task<ActionResult> RemoveAchievement(Guid id)
         {
             var result = await _achievementsService.RemoveAchievement(id);
 
@@ -92,7 +88,7 @@ namespace ThePlant.API.Controllers
         /// <param name="id">The identifier of the achievement.</param>
         /// <returns>An ActionResult containing the achievement or a 404 Not Found.</returns>
         [HttpGet("{id}")]
-        public async Task<ActionResult<Achievement>> GetAchievement(int id)
+        public async Task<ActionResult<Achievement>> GetAchievement(Guid id)
         {
             var result = await _achievementsService.GetAchievement(id);
 
@@ -109,7 +105,7 @@ namespace ThePlant.API.Controllers
         /// <param name="userId">Optional user identifier to get achievements for a specific user (from query string).</param>
         /// <returns>An ActionResult containing the collection of achievements or an error.</returns>
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Achievement>>> GetAchievements([FromQuery] int? userId = null)
+        public async Task<ActionResult<IEnumerable<Achievement>>> GetAchievements([FromQuery] Guid? userId = null)
         {
             var result = await _achievementsService.GetAchievements(userId);
 
@@ -127,13 +123,8 @@ namespace ThePlant.API.Controllers
         /// <param name="userId">The identifier of the user (from body).</param>
         /// <returns>An ActionResult indicating success or failure.</returns>
         [HttpPost("{id}/markdone")]
-        public async Task<ActionResult> MarkAsDone(int id, [FromBody] int userId)
+        public async Task<ActionResult> MarkAsDone(Guid id, [FromBody] Guid userId)
         {
-            if (userId <= 0)
-            {
-                return BadRequest("Valid user ID is required.");
-            }
-
             var result = await _achievementsService.MarkAsDone(userId, id);
 
             if (!result.IsError)
@@ -150,9 +141,9 @@ namespace ThePlant.API.Controllers
         /// <param name="shareRequest">Object containing user ID and platform (from body).</param>
         /// <returns>An ActionResult indicating success or failure.</returns>
         [HttpPost("{id}/share")]
-        public async Task<ActionResult> ShareAchievement(int id, [FromBody] ShareAchievementRequest shareRequest)
+        public async Task<ActionResult> ShareAchievement(Guid id, [FromBody] ShareAchievementRequest shareRequest)
         {
-            if (shareRequest == null || shareRequest.UserId <= 0 || string.IsNullOrEmpty(shareRequest.Platform))
+            if (shareRequest == null || string.IsNullOrEmpty(shareRequest.Platform))
             {
                 return BadRequest("Valid user ID and platform are required for sharing.");
             }
@@ -174,7 +165,7 @@ namespace ThePlant.API.Controllers
             /// <summary>
             /// The identifier of the user sharing the achievement.
             /// </summary>
-            public int UserId { get; set; }
+            public Guid UserId { get; set; }
 
             /// <summary>
             /// The platform to share on (e.g., "Twitter", "Facebook").

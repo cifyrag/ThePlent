@@ -24,7 +24,7 @@ public interface IPlantService
         /// </summary>
         /// <param name="plantId">The identifier of the plant.</param>
         /// <returns>The Plant object, or null if not found.</returns>
-        Task<Result<Plant>> GetPlant(int plantId);
+        Task<Result<Plant>> GetPlant(Guid plantId);
         
         /// <summary>
         /// Gets a collection of plants.
@@ -41,7 +41,7 @@ public interface IPlantService
         /// </summary>
         /// <param name="plantId">The identifier of the plant to remove.</param>
         /// <returns>True if the removal was successful, false otherwise.</returns>
-        Task<Result<bool>> RemovePlant(int plantId); 
+        Task<Result<bool>> RemovePlant(Guid plantId); 
 
         /// <summary>
         /// Retrieves a collection of plants, possibly for display purposes.
@@ -54,5 +54,5 @@ public interface IPlantService
         /// </summary>
         /// <param name="plantId">The identifier of the plant.</param>
         /// <returns>The PlantCareInstructions object for the plant, or null if not found.</returns>
-        Task<Result<PlantCareInstruction>> ViewPlantCareInstructions(int plantId); 
+        Task<Result<PlantCareInstruction>> ViewPlantCareInstructions(Guid plantId); 
     }

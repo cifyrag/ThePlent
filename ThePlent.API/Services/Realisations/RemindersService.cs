@@ -13,7 +13,7 @@ public class RemindersService: IRemindersService
         _logger = logger;
     }
 
-    public async Task<Result<bool>> MarkAsDone(int userId, int reminderId)
+    public async Task<Result<bool>> MarkAsDone(Guid userId, Guid reminderId)
     {
          try
         {
@@ -27,7 +27,7 @@ public class RemindersService: IRemindersService
         }
     }
 
-    public async Task<Result<bool>> ImportToCalendar(int userId, int reminderId, string calendarId = null)
+    public async Task<Result<bool>> ImportToCalendar(Guid userId, Guid reminderId, string calendarId = null)
     {
          try
         {
@@ -41,7 +41,7 @@ public class RemindersService: IRemindersService
         }
     }
 
-    public async Task<Result<IEnumerable<Reminder>>> GetUserReminders(int userId)
+    public async Task<Result<IEnumerable<Reminder>>> GetUserReminders(Guid userId)
     {
          try
         {
@@ -69,7 +69,7 @@ public class RemindersService: IRemindersService
         }
     }
 
-    public async Task<Result<bool>> DeleteReminder(int userId, int reminderId)
+    public async Task<Result<bool>> DeleteReminder(Guid userId, Guid reminderId)
     {
          try
         {
@@ -83,7 +83,7 @@ public class RemindersService: IRemindersService
         }
     }
 
-    public async Task<Result<IEnumerable<Reminder>>> GetUpcomingReminders(int userId, int timeframeInDays = 7)
+    public async Task<Result<IEnumerable<Reminder>>> GetUpcomingReminders(Guid userId, int timeframeInDays = 7)
     {
          try
         {

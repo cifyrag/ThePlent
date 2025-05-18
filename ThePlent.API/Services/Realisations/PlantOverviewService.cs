@@ -27,7 +27,7 @@ public class PlantOverviewService: IPlantOverviewService
         }
     }
 
-    public async Task<Result<PlantOverview>> GetPlant_Overview(int overviewId)
+    public async Task<Result<PlantOverview>> GetPlant_Overview(Guid overviewId)
     {
          try
         {
@@ -41,7 +41,7 @@ public class PlantOverviewService: IPlantOverviewService
         }
     }
 
-    public async Task<Result<bool>> DeletePlant_Overview(int overviewId)
+    public async Task<Result<bool>> DeletePlant_Overview(Guid overviewId)
     {
          try
         {

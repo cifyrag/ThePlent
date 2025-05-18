@@ -29,9 +29,9 @@ namespace ThePlant.API.Controllers
         /// <param name="userId">The identifier of the user (from body).</param>
         /// <returns>An ActionResult indicating success or failure.</returns>
         [HttpPost("{id}/markdone")]
-        public async Task<ActionResult> MarkAsDone(int id, [FromBody] int userId)
+        public async Task<ActionResult> MarkAsDone(Guid id, [FromBody] Guid userId)
         {
-            if (userId <= 0)
+            if (userId.Equals(Guid.Empty))
             {
                 return BadRequest("Valid user ID is required.");
             }
@@ -53,9 +53,9 @@ namespace ThePlant.API.Controllers
         /// <param name="importRequest">Object containing user ID and optional calendar ID (from body).</param>
         /// <returns>An ActionResult indicating success or failure.</returns>
         [HttpPost("{id}/importtocalendar")]
-        public async Task<ActionResult> ImportToCalendar(int id, [FromBody] ImportToCalendarRequest importRequest)
+        public async Task<ActionResult> ImportToCalendar(Guid id, [FromBody] ImportToCalendarRequest importRequest)
         {
-            if (importRequest == null || importRequest.UserId <= 0)
+            if (importRequest == null )
             {
                 return BadRequest("Valid user ID is required for importing to calendar.");
             }
@@ -76,9 +76,9 @@ namespace ThePlant.API.Controllers
         /// <param name="userId">The identifier of the user (from query string).</param>
         /// <returns>An ActionResult containing the collection of reminder objects for the user or an error.</returns>
         [HttpGet("user/{userId}")] // Route to get reminders for a specific user
-        public async Task<ActionResult<IEnumerable<Reminder>>> GetUserReminders(int userId)
+        public async Task<ActionResult<IEnumerable<Reminder>>> GetUserReminders(Guid userId)
         {
-            if (userId <= 0)
+            if (userId.Equals(Guid.Empty))
             {
                 return BadRequest("Valid user ID is required.");
             }
@@ -123,9 +123,9 @@ namespace ThePlant.API.Controllers
         /// <param name="userId">The identifier of the user (from body).</param>
         /// <returns>An ActionResult indicating success or failure.</returns>
         [HttpDelete("{id}")]
-        public async Task<ActionResult> DeleteReminder(int id, [FromBody] int userId)
+        public async Task<ActionResult> DeleteReminder(Guid id, [FromBody] Guid userId)
         {
-            if (userId <= 0)
+            if (userId.Equals(Guid.Empty))
             {
                 return BadRequest("Valid user ID is required.");
             }
@@ -147,9 +147,9 @@ namespace ThePlant.API.Controllers
         /// <param name="timeframeInDays">The number of upcoming days to check (from query string, optional).</param>
         /// <returns>An ActionResult containing the collection of upcoming reminder objects for the user or an error.</returns>
         [HttpGet("user/{userId}/upcoming")] // Route to get upcoming reminders for a user
-        public async Task<ActionResult<IEnumerable<Reminder>>> GetUpcomingReminders(int userId, [FromQuery] int timeframeInDays = 7)
+        public async Task<ActionResult<IEnumerable<Reminder>>> GetUpcomingReminders(Guid userId, [FromQuery] int timeframeInDays = 7)
         {
-            if (userId <= 0)
+            if (userId.Equals(Guid.Empty))
             {
                 return BadRequest("Valid user ID is required.");
             }
@@ -195,7 +195,7 @@ namespace ThePlant.API.Controllers
             /// <summary>
             /// The identifier of the user.
             /// </summary>
-            public int UserId { get; set; }
+            public Guid UserId { get; set; }
 
             /// <summary>
             /// The identifier of the calendar to import to (optional).

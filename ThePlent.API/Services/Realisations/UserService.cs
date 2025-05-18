@@ -55,7 +55,7 @@ public class UserService: IUserService
         }
     }
 
-    public async Task<Result<User>> GetUser(int userId)
+    public async Task<Result<User>> GetUser(Guid userId)
     {
          try
         {
@@ -69,7 +69,7 @@ public class UserService: IUserService
         }
     }
 
-    public async Task<Result<Success>> ChooseLanguage(int userId, string languageCode)
+    public async Task<Result<Success>> ChooseLanguage(Guid userId, string languageCode)
     {
          try
         {
@@ -97,7 +97,7 @@ public class UserService: IUserService
         }
     }
 
-    public async Task<Result<Success>> AllowNotifications(int userId, bool allow)
+    public async Task<Result<Success>> AllowNotifications(Guid userId, bool allow)
     {
          try
         {

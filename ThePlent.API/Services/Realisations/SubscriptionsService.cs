@@ -13,7 +13,7 @@ public class SubscriptionsService: ISubscriptionsService
         _logger = logger;
     }
 
-    public async Task<Result<DateTime?>> CheckExpirationDate(int userId)
+    public async Task<Result<DateTime?>> CheckExpirationDate(Guid userId)
     {
          try
         {
@@ -41,7 +41,7 @@ public class SubscriptionsService: ISubscriptionsService
         }
     }
 
-    public async Task<Result<bool>> Subscribe(int userId, int planId)
+    public async Task<Result<bool>> Subscribe(Guid userId, Guid planId)
     {
          try
         {
@@ -55,7 +55,7 @@ public class SubscriptionsService: ISubscriptionsService
         }
     }
 
-    public async Task<Result<bool>> CancelSubscription(int subscriptionId)
+    public async Task<Result<bool>> CancelSubscription(Guid subscriptionId)
     {
          try
         {

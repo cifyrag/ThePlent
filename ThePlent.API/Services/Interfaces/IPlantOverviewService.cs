@@ -17,12 +17,12 @@ public interface IPlantOverviewService
     /// </summary>
     /// <param name="overviewId">The identifier of the plant overview.</param>
     /// <returns>The PlantOverview object, or null if not found.</returns>
-    Task<Result<PlantOverview>> GetPlant_Overview(int overviewId); 
+    Task<Result<PlantOverview>> GetPlant_Overview(Guid overviewId); 
     
     /// <summary>
     /// Deletes a plant overview entry by its identifier.
     /// </summary>
     /// <param name="overviewId">The identifier of the plant overview to delete.</param>
     /// <returns>True if the deletion was successful, false otherwise.</returns>
-    Task<Result<bool>> DeletePlant_Overview(int overviewId);
+    Task<Result<bool>> DeletePlant_Overview(Guid overviewId);
 }

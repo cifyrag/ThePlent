@@ -15,7 +15,7 @@ public interface IUserService
 
         /// <summary>
         /// Registers a new user.
-        /// </summary>
+        /// </summary>+
         /// <param name="userData">The data for the new user.</param>
         /// <returns>The newly registered User object, or null if registration fails.</returns>
         Task<Result<User>> RegisterUser(User userData); 
@@ -32,14 +32,14 @@ public interface IUserService
         /// </summary>
         /// <param name="userId">The identifier of the user.</param>
         /// <returns>The User object, or null if not found.</returns>
-        Task<Result<User>> GetUser(int userId); 
+        Task<Result<User>> GetUser(Guid userId); 
         
         /// <summary>
         /// Allows the user to choose their language preference.
         /// </summary>
         /// <param name="userId">The identifier of the user.</param>
         /// <param name="languageCode">The code for the chosen language.</param>
-        Task<Result<Success>> ChooseLanguage(int userId, string languageCode); 
+        Task<Result<Success>> ChooseLanguage(Guid userId, string languageCode); 
 
         /// <summary>
         /// Updates the data for an existing user.
@@ -53,5 +53,5 @@ public interface IUserService
         /// </summary>
         /// <param name="userId">The identifier of the user.</param>
         /// <param name="allow">True to allow notifications, false to disallow.</param>
-        Task<Result<Success>> AllowNotifications(int userId, bool allow); 
+        Task<Result<Success>> AllowNotifications(Guid userId, bool allow); 
 }
