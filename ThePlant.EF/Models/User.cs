@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Identity;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -8,7 +9,7 @@ using ThePlant.EF.Models.Enam;
 
 namespace ThePlant.EF.Models
 {
-    public class User
+    public class User : IdentityUser
     {
         [Key]
         public Guid UserId { get; set; } = Guid.NewGuid();
