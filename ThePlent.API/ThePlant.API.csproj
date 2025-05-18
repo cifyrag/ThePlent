@@ -13,12 +13,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Controllers\" />
-    <Folder Include="Services\Interfaces\" />
-    <Folder Include="Services\Realisations\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\ThePlant.EF\ThePlant.EF.csproj" />
   </ItemGroup>
 
