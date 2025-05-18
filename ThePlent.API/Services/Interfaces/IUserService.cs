@@ -1,4 +1,5 @@
 ﻿using ThePlant.EF.Models;
+using ThePlant.EF.Models.Enam;
 using ThePlant.EF.Utils;
 
 namespace ThePlant.API.Services.Interfaces;
@@ -39,7 +40,7 @@ public interface IUserService
         /// </summary>
         /// <param name="userId">The identifier of the user.</param>
         /// <param name="languageCode">The code for the chosen language.</param>
-        Task<Result<Success>> ChooseLanguage(Guid userId, string languageCode); 
+        Task<Result<Success>> ChooseLanguage(Guid userId, Language languageCode); 
 
         /// <summary>
         /// Updates the data for an existing user.

@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using ThePlant.API.Services.Interfaces;
 using ThePlant.EF.Models;
+using ThePlant.EF.Models.Enam;
 using ThePlant.EF.Utils;
 
 namespace ThePlant.API.Controllers
@@ -124,7 +125,7 @@ namespace ThePlant.API.Controllers
         [HttpPost("{userId}/language")] // POST api/User/{userId}/language
         public async Task<ActionResult<Success>> ChooseLanguage(Guid userId, [FromBody] ChooseLanguageRequest languageRequest)
         {
-            if ( languageRequest == null || string.IsNullOrEmpty(languageRequest.LanguageCode))
+            if ( languageRequest == null )
             {
                 return BadRequest("Valid user ID and language code are required.");
             }
@@ -221,7 +222,7 @@ namespace ThePlant.API.Controllers
             /// <summary>
             /// The code for the chosen language.
             /// </summary>
-            public string LanguageCode { get; set; }
+            public Language LanguageCode { get; set; }
         }
 
         /// <summary>

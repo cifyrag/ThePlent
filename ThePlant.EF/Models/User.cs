@@ -14,12 +14,8 @@ namespace ThePlant.EF.Models
         public Guid UserId { get; set; } = Guid.NewGuid();
 
         [Required]
-        [MaxLength(100)]
-        public string? FirstName { get; set; }
-
-        [Required]
-        [MaxLength(100)]
-        public string? LastName { get; set; }
+        [MaxLength(250)]
+        public string? Username { get; set; }
 
         [Required]
         [EmailAddress]
@@ -37,6 +33,8 @@ namespace ThePlant.EF.Models
 
         [Required]
         public string? Password { get; set; }
+
+        public bool AllowsNotifications { get; set; } = false;
 
         public virtual ICollection<Feedback>? Feedbacks { get; set; }
         public virtual ICollection<UserSubscription>? UserSubscriptions { get; set; }
