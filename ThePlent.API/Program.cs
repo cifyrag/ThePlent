@@ -3,6 +3,8 @@ using ThePlant.EF;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.WebHost.UseUrls("https://localhost:7016", "http://localhost:5069");
+
 // Add services to the container.
 ThePlant.EF.Services.DependencyRegistration.RegisterDependency(builder.Services, builder.Configuration);
 ThePlant.API.Services.DependencyRegistration.RegisterDependency(builder.Services, builder.Configuration);
@@ -19,16 +21,9 @@ var app = builder.Build();
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
-    app.UseDeveloperExceptionPage();
     app.UseSwagger();
     app.UseSwaggerUI();
 }
-else
-{
-    app.UseExceptionHandler("/error"); 
-    app.UseHsts();
-}
-
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
@@ -39,5 +34,6 @@ app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
 app.UseAntiforgery();
+
 
 app.Run();
