@@ -3,11 +3,18 @@ using ThePlant.EF;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.WebHost.UseUrls("https://localhost:7016", "http://localhost:5069");
 
 // Add services to the container.
 ThePlant.EF.Services.DependencyRegistration.RegisterDependency(builder.Services, builder.Configuration);
 ThePlant.API.Services.DependencyRegistration.RegisterDependency(builder.Services, builder.Configuration);
+
+builder.Services.AddCors(o =>
+{
+    o.AddPolicy("AllowAll", builder =>
+    {
+        builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader();
+    });
+});
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
@@ -30,10 +37,12 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
-
+app.UseCors("AllowAll"); 
 app.UseAuthentication();
 app.UseAuthorization();
 app.UseAntiforgery();
+
+app.MapControllers();
 
 
 app.Run();

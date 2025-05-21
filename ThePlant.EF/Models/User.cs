@@ -9,7 +9,7 @@ using ThePlant.EF.Models.Enam;
 
 namespace ThePlant.EF.Models
 {
-    public class User : IdentityUser
+    public class User 
     {
         [Key]
         public Guid UserId { get; set; } = Guid.NewGuid();
@@ -30,7 +30,7 @@ namespace ThePlant.EF.Models
 
         public Language Lang { get; set; }
 
-        public bool IsAdmin { get; set; }
+        public bool IsAdmin { get; set; } = false;
 
         [Required]
         public string? Password { get; set; }
