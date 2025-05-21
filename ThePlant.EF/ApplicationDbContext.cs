@@ -10,7 +10,7 @@ using ThePlant.EF.Models;
 
 namespace ThePlant.EF
 {
-    public class ApplicationDbContext : IdentityDbContext<User>
+    public class ApplicationDbContext : DbContext
     {
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
         {

@@ -12,8 +12,8 @@ using ThePlant.EF;
 namespace ThePlant.EF.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250518151605_FirstMigration")]
-    partial class FirstMigration
+    [Migration("20250521150435_initcomit")]
+    partial class initcomit
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
