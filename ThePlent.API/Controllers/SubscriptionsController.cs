@@ -1,4 +1,5 @@
 ﻿
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ThePlant.API.Services.Interfaces;
 using ThePlant.EF.Models;
@@ -10,6 +11,7 @@ namespace ThePlant.API.Controllers
     /// </summary>
     [ApiController]
     [Route("api/[controller]")] 
+    [Authorize]
     public class SubscriptionsController : ControllerBase
     {
         private readonly ISubscriptionsService _subscriptionsService;
@@ -59,6 +61,7 @@ namespace ThePlant.API.Controllers
         /// <param name="subscriptionData">The data for the new subscription.</param>
         /// <returns>An ActionResult containing the newly added subscription or an error.</returns>
         [HttpPost] // POST api/Subscriptions
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult<Subscription>> AddSubscription([FromBody] Subscription subscriptionData)
         {
             if (subscriptionData == null )

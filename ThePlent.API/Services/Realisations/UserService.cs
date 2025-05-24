@@ -1,8 +1,15 @@
 ﻿
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Text;
+using Microsoft.Extensions.Options;
+using Microsoft.IdentityModel.Tokens;
+using Microsoft.VisualStudio.Services.Notifications;
 using ThePlant.API.Services.Interfaces;
 using ThePlant.EF.Models;
 using ThePlant.EF.Models.Enam;
 using ThePlant.EF.Repository;
+using ThePlant.EF.Settings;
 using ThePlant.EF.Utils;
 
 namespace ThePlant.API.Services.Realisations;
@@ -12,6 +19,11 @@ namespace ThePlant.API.Services.Realisations;
 /// </summary>
 public class UserService : IUserService
 {
+    private readonly TimeSpan expiration = TimeSpan.FromDays(365);
+    private readonly JwtSecurityTokenHandler jwtSecurityTokenHandler = new();
+    private readonly string _issuer;
+    private readonly string _audience;
+    private readonly SigningCredentials _signingCredentials;
     private readonly ILogger<UserService> _logger;
     private readonly IGenericRepository<User> _userRepository; // Repository for User
 
@@ -20,10 +32,16 @@ public class UserService : IUserService
     /// </summary>
     /// <param name="logger">The logger for the service.</param>
     /// <param name="userRepository">The generic repository for User.</param>
-    public UserService(ILogger<UserService> logger, IGenericRepository<User> userRepository)
+    public UserService(ILogger<UserService> logger, IGenericRepository<User> userRepository, IOptions<JWTSettings> jwtSettings)
     {
         _logger = logger;
         _userRepository = userRepository;
+        _signingCredentials = new(
+            new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings.Value.IssuerSigningKey)),
+            SecurityAlgorithms.HmacSha256
+        );
+        _issuer = jwtSettings.Value.ValidIssuer;
+        _audience = jwtSettings.Value.ValidAudience;
     }
 
     /// <summary>
@@ -32,7 +50,7 @@ public class UserService : IUserService
     /// <param name="username">The user's username.</param>
     /// <param name="password">The user's password.</param>
     /// <returns>The authenticated User object, or an error if login fails.</returns>
-    public async Task<Result<User>> LoginUser(string username, string password)
+    public async Task<Result<string>> LoginUser(string username, string password)
     {
          try
         {
@@ -41,7 +59,7 @@ public class UserService : IUserService
                 return Error.Validation("Username and password are required.");
             }
 
-            var userResult = await _userRepository.GetSingleAsync<User>(u => u.Username == username); // Assuming User has Username
+            var userResult = await _userRepository.GetSingleAsync<User>(u => u.Username == username && u.IsAdmin == false); 
 
             if (userResult.IsError)
             {
@@ -60,7 +78,7 @@ public class UserService : IUserService
                 return Error.Unauthorized("Invalid credentials.");
             }
 
-            return userResult;
+            return IssueToken(userResult.Value, Roles.User);
         }
         catch (Exception ex)
         {
@@ -68,7 +86,56 @@ public class UserService : IUserService
             return Error.Unexpected();
         }
     }
+    
+    public async Task<Result<string>> LoginAdmin(string username, string password)
+    {
+        try
+        {
+            if (string.IsNullOrEmpty(username) || string.IsNullOrEmpty(password))
+            {
+                return Error.Validation("Username and password are required.");
+            }
 
+            var userResult = await _userRepository.GetSingleAsync<User>(u => u.Username == username && u.IsAdmin == true); 
+
+            if (userResult.IsError)
+            {
+                return userResult.Error;
+            }
+
+            if (userResult?.Value == null)
+            {
+                return Error.NotFound("User not found.");
+            }
+
+            bool isPasswordValid = VerifyPasswordHash(password, userResult.Value.Password); 
+            
+            if (!isPasswordValid)
+            {
+                return Error.Unauthorized("Invalid credentials.");
+            }
+
+            return IssueToken(userResult.Value, Roles.Admin);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "An error occurred during user login.");
+            return Error.Unexpected();
+        }
+    }
+    private string IssueToken(User user, Roles role) => jwtSecurityTokenHandler.WriteToken(
+        new JwtSecurityToken(
+            _issuer,
+            _audience,
+            claims:
+            [
+                new Claim(ClaimTypes.NameIdentifier, user.UserId.ToString()),
+                new Claim(ClaimTypes.Role, role.ToString()),
+            ],
+            signingCredentials: _signingCredentials,
+            expires: DateTimeOffset.UtcNow.Add(expiration).UtcDateTime
+        )
+    );
     /// <summary>
     /// Registers a new user.
     /// </summary>

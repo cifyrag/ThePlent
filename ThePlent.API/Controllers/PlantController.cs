@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using ThePlant.API.Services.Interfaces;
 using ThePlant.EF.Models;
 
@@ -8,6 +9,7 @@ namespace ThePlant.API.Controllers
     /// API controller for managing plant entries.
     /// </summary>
     [ApiController]
+    [Authorize]
     [Route("api/[controller]")] 
     public class PlantController : ControllerBase
     {
@@ -28,6 +30,7 @@ namespace ThePlant.API.Controllers
         /// <param name="plantData">The data for the new plant.</param>
         /// <returns>An ActionResult containing the newly added plant or an error.</returns>
         [HttpPost]
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult<Plant>> AddPlant([FromBody] Plant plantData)
         {
             if (plantData == null)
@@ -51,6 +54,7 @@ namespace ThePlant.API.Controllers
         /// <param name="plantData">The updated plant data.</param>
         /// <returns>An ActionResult indicating success or failure.</returns>
         [HttpPut]
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult> UpdatePlant([FromBody] Plant plantData)
         {
             if (plantData == null )
@@ -109,6 +113,7 @@ namespace ThePlant.API.Controllers
         /// <param name="id">The identifier of the plant to remove.</param>
         /// <returns>An ActionResult indicating success or failure.</returns>
         [HttpDelete("{id}")]
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult> RemovePlant(Guid id)
         {
             var result = await _plantService.RemovePlant(id);

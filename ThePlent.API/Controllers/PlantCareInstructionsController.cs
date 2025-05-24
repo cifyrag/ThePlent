@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using ThePlant.API.Services.Interfaces;
 using ThePlant.EF.Models;
 
@@ -9,6 +10,7 @@ namespace ThePlant.API.Controllers
     /// </summary>
     [ApiController]
     [Route("api/[controller]")] 
+    [Authorize]
     public class PlantCareInstructionsController : ControllerBase
     {
         private readonly IPlantCareInstructionsService _plantCareInstructionsService;
@@ -28,6 +30,7 @@ namespace ThePlant.API.Controllers
         /// <param name="careInstructionData">The data for the new care instruction.</param>
         /// <returns>An ActionResult containing the newly added instruction or an error.</returns>
         [HttpPost]
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult<PlantCareInstruction>> AddCareInstruction([FromBody] PlantCareInstruction careInstructionData)
         {
             if (careInstructionData == null)
@@ -68,6 +71,7 @@ namespace ThePlant.API.Controllers
         /// <param name="careInstructionData">The updated care instruction data.</param>
         /// <returns>An ActionResult indicating success or failure.</returns>
         [HttpPut]
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult> UpdateCareInstruction([FromBody] PlantCareInstruction careInstructionData)
         {
             if (careInstructionData == null )
@@ -91,6 +95,7 @@ namespace ThePlant.API.Controllers
         /// <param name="id">The identifier of the care instruction to remove.</param>
         /// <returns>An ActionResult indicating success or failure.</returns>
         [HttpDelete("{id}")]
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult> RemoveCareInstruction(Guid id)
         {
             var result = await _plantCareInstructionsService.RemoveCareInstruction(id);
