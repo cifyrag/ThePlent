@@ -1,7 +1,12 @@
+using System.Text;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using ThePlant.EF;
 using ThePlant.EF.Models;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 namespace ThePlant.UI
 {
     public class Program
@@ -19,10 +24,40 @@ namespace ThePlant.UI
             builder.Services.AddDefaultIdentity<User>(options =>
                 options.SignIn.RequireConfirmedAccount = true)
                 .AddEntityFrameworkStores<ApplicationDbContext>();
+            
+            var Configuration = new ConfigurationBuilder()
+                .SetBasePath(Directory.GetCurrentDirectory())
+                .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+                .Build();
+            TokenValidationParameters validationParameters = new TokenValidationParameters
+            {
+                ValidateIssuer = true,
+                ValidIssuer = Configuration["Authentication:Schemes:Bearer:ValidIssuer"],
+                ValidateIssuerSigningKey = true,
+                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["Authentication:Schemes:Bearer:IssuerSigningKey"]!)),
+                ValidateAudience = true,
+                ValidAudience = Configuration["Authentication:Schemes:Bearer:ValidAudience"],
+                ValidateLifetime = false,
+            };
 
+            // Add services to the container.
+            builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                .AddJwtBearer(options => {
+                    options.TokenValidationParameters = validationParameters;
+                    options.Events = new JwtBearerEvents
+                    {
+                        OnMessageReceived = ctx =>
+                        {
+                            ctx.Request.Cookies.TryGetValue("Token", out var token);
+                            if (!string.IsNullOrEmpty(token))
+                                ctx.Token = token;
+                            return Task.CompletedTask;
+                        }
+                    };
+                });
+            
             builder.Services.AddControllersWithViews().AddRazorRuntimeCompilation();
             builder.Services.AddRazorPages();
-
             var app = builder.Build();
 
             if (!app.Environment.IsDevelopment())
@@ -32,7 +67,6 @@ namespace ThePlant.UI
             }
 
             app.UseHttpsRedirection();
-            app.UseStaticFiles();
 
             app.UseRouting();
 

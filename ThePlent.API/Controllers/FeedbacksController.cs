@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using ThePlant.API.Services.Interfaces;
 using ThePlant.EF.Models;
 using ThePlant.EF.Utils;
@@ -10,6 +11,7 @@ namespace ThePlant.API.Controllers
     /// </summary>
     [ApiController]
     [Route("api/[controller]")] 
+    [Authorize]
     public class FeedbacksController : ControllerBase
     {
         private readonly IFeedBacksService _feedbacksService;

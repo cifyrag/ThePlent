@@ -7,25 +7,30 @@ namespace ThePlant.API.Services.Interfaces;
 public interface IUserService
 {
     /// <summary>
-        /// Logs in a user with username and password.
-        /// </summary>
-        /// <param name="username">The user's username.</param>
-        /// <param name="password">The user's password.</param>
-        /// <returns>The authenticated User object, or null if login fails.</returns>
-        Task<Result<User>> LoginUser(string username, string password); 
+    /// Logs in a user with username and password.
+    /// </summary>
+    /// <param name="username">The user's username.</param>
+    /// <param name="password">The user's password.</param>
+    /// <returns>The authenticated User object, or null if login fails.</returns>
+    Task<Result<string>> LoginUser(string username, string password); 
 
         /// <summary>
         /// Registers a new user.
         /// </summary>+
         /// <param name="userData">The data for the new user.</param>
         /// <returns>The newly registered User object, or null if registration fails.</returns>
-        Task<Result<User>> RegisterUser(User userData); 
+        Task<Result<User>> RegisterUser(User userData);
+
+        /// <summary>
+        /// Logs in an admin (could be an alternative login method like with a token).
+        /// </summary>
+        /// <param name="token">The login token.</param>
+        Task<Result<string>> LoginAdmin(string username, string password);
 
         /// <summary>
         /// Logs in a user (could be an alternative login method like with a token).
         /// </summary>
         /// <param name="token">The login token.</param>
-        /// <returns>The authenticated User object, or null if login fails.</returns>
         Task<Result<User>> Login(string token); 
 
         /// <summary>

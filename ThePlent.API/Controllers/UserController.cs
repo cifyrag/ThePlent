@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using ThePlant.API.Services.Interfaces;
 using ThePlant.EF.Models;
 using ThePlant.EF.Models.Enam;
@@ -24,6 +25,29 @@ namespace ThePlant.API.Controllers
             _userService = userService;
         }
 
+        /// <summary>
+        /// Logs in a user with username and password.
+        /// </summary>
+        /// <param name="loginRequest">Object containing username and password (from body).</param>
+        /// <returns>An ActionResult containing the authenticated User object or an error.</returns>
+        [HttpPost("login-admin")] // POST api/User/login
+        public async Task<ActionResult<User>> LoginAdmin([FromBody] LoginRequest loginRequest)
+        {
+            if (loginRequest == null || string.IsNullOrEmpty(loginRequest.Username) || string.IsNullOrEmpty(loginRequest.Password))
+            {
+                return BadRequest("Username and password are required for login.");
+            }
+
+            var result = await _userService.LoginAdmin(loginRequest.Username, loginRequest.Password);
+
+            
+            if (!result.IsError)
+            {
+                return Ok(result.Value);
+            }
+            return BadRequest(result.Error);
+        }
+        
         /// <summary>
         /// Logs in a user with username and password.
         /// </summary>
@@ -99,6 +123,7 @@ namespace ThePlant.API.Controllers
         /// <param name="userId">The identifier of the user (from route).</param>
         /// <returns>An ActionResult containing the User object or a 404 Not Found.</returns>
         [HttpGet("{userId}")] // GET api/User/{userId}
+        [Authorize]
         public async Task<ActionResult<User>> GetUser(Guid userId)
         {
             if (userId.Equals(Guid.Empty))
@@ -146,6 +171,7 @@ namespace ThePlant.API.Controllers
         /// <param name="userData">The updated user data (from body).</param>
         /// <returns>An ActionResult indicating success or failure.</returns>
         [HttpPut] // PUT api/User
+        [Authorize]
         public async Task<ActionResult> UpdateUserData([FromBody] User userData)
         {
             if (userData == null )
@@ -170,6 +196,7 @@ namespace ThePlant.API.Controllers
         /// <param name="notificationRequest">Object containing the allow flag (from body).</param>
         /// <returns>An ActionResult indicating success or failure.</returns>
         [HttpPost("{userId}/notifications")] // POST api/User/{userId}/notifications
+        [Authorize]
         public async Task<ActionResult<Success>> AllowNotifications(Guid userId, [FromBody] AllowNotificationsRequest notificationRequest)
         {
             if ( notificationRequest == null)
