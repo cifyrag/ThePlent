@@ -27,12 +27,12 @@ var Configuration = new ConfigurationBuilder()
 TokenValidationParameters validationParameters = new TokenValidationParameters
 {
     ValidateIssuer = true,
-    ValidateAudience = true,
-    ValidateLifetime = true,
+    ValidIssuer = Configuration["Authentication:Schemes:Bearer:ValidIssuer"],
     ValidateIssuerSigningKey = true,
-    ValidIssuer = Configuration["Jwt:Issuer"],
-    ValidAudience = Configuration["Jwt:Audience"],
-    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["Jwt:Key"]))
+    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["Authentication:Schemes:Bearer:IssuerSigningKey"]!)),
+    ValidateAudience = true,
+    ValidAudience = Configuration["Authentication:Schemes:Bearer:ValidAudience"],
+    ValidateLifetime = false,
 };
 
 // Add services to the container.
