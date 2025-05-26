@@ -1,0 +1,61 @@
+﻿@model IEnumerable<ThePlant.EF.Models.Plant>
+
+@{
+    var filterModel = (ThePlant.EF.Models.PlantFilterViewModel)ViewData["FilterModel"];
+}
+
+<div id="errorMessages" class="alert alert-danger" style="display: none;"></div>
+
+<form method="get" class="row g-3" id="filterForm">
+
+    <div class="col-md-4">
+        <label for="searchTerm" class="form-label">Search</label>
+        <input type="text" class="form-control" id="searchTerm" name="searchTerm"
+               value="@filterModel?.SearchTerm" placeholder="Search plants...">
+    </div>
+
+    <div class="col-md-4">
+        <label for="category" class="form-label">Category</label>
+        <select class="form-select" id="category" name="category">
+            <option value="">All Categories</option>
+            @foreach (var cat in filterModel?.Categories ?? new List<string>())
+            {
+           //     <option value="@cat" @(cat == filterModel?.CurrentCategory ? "selected" : "")>@cat</option>
+            }
+        </select>
+    </div>
+
+    <div class="col-md-4">
+        <label for="careFrequency" class="form-label">Care Frequency (times per week)</label>
+        <input type="number" class="form-control" id="careFrequency" name="careFrequency"
+               value="@(filterModel?.CurrentCareFrequency?.ToString() ?? "")" min="0" placeholder="e.g. 3">
+    </div>
+
+    <div class="col-12">
+        <button type="submit" class="btn btn-primary">Apply Filters</button>
+        <a href="@Url.Action("Index")" class="btn btn-secondary">Clear Filters</a>
+    </div>
+</form>
+
+<script>
+    document.getElementById('filterForm').addEventListener('submit', function (e) {
+        const careFrequencyInput = document.getElementById('careFrequency');
+        const errorMessages = [];
+        const errorDiv = document.getElementById('errorMessages');
+
+        const careFreq = careFrequencyInput.value === "" ? null : parseInt(careFrequencyInput.value);
+
+        if (careFreq !== null && (careFreq < 0 || isNaN(careFreq))) {
+            errorMessages.push('Care frequency must be a non-negative number');
+        }
+
+        if (errorMessages.length > 0) {
+            e.preventDefault();
+            errorDiv.innerHTML = errorMessages.join('<br>');
+            errorDiv.style.display = 'block';
+            window.scrollTo({ top: errorDiv.offsetTop, behavior: 'smooth' });
+        } else {
+            errorDiv.style.display = 'none';
+        }
+    });
+</script>

@@ -27,6 +27,8 @@ namespace ThePlant.EF
         public DbSet<Reminder> Reminders { get; set; }
         public DbSet<PlantCareInstruction> PlantCareInstructions { get; set; }
         public DbSet<PlantOverview> PlantOverviews { get; set; }
+        public DbSet<PlantImage> PlantImages { get; set; }
+
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -92,6 +94,13 @@ namespace ThePlant.EF
                 .WithMany(p => p.PlantOverviews)
                 .HasForeignKey(po => po.PlantId)
                 .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<PlantImage>()
+            .HasOne(pi => pi.Plant)
+            .WithMany(p => p.PlantImages)
+            .HasForeignKey(pi => pi.PlantId)
+            .OnDelete(DeleteBehavior.Cascade);
+
         }
     }
 
