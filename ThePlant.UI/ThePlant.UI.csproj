@@ -26,4 +26,8 @@
     <ProjectReference Include="..\ThePlant.EF\ThePlant.EF.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Areas\Identity\Data\" />
+  </ItemGroup>
+
 </Project>

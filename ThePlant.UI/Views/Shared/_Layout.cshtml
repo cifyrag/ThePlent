@@ -6,27 +6,43 @@
     <title>@ViewData["Title"] - ThePlant.UI</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/Minty.css" asp-append-version="true" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
     <link rel="stylesheet" href="~/ThePlant.UI.styles.css" asp-append-version="true" />
 </head>
 <body>
     <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+        <nav class="navbar navbar-expand-lg bg-primary" data-bs-theme="dark">
             <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">ThePlant.UI</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
+                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">HomeGardenWeb</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarColor01" aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
+                <div class="collapse navbar-collapse" id="navbarColor01">
+                    <ul class="navbar-nav me-auto">
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+                            <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+                            <a class="nav-link" asp-area="" asp-controller="UserPlant" asp-action="MyPlant">My Plant</a>
                         </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">ADMIN</a>
+                            <div class="dropdown-menu" data-bs-popper="static">
+                                <a class="dropdown-item" asp-area="" asp-controller="Plants" asp-action="Index">Plants</a>
+                                <a class="dropdown-item" asp-area="" asp-controller="Category" asp-action="Index">Category</a>
+                                <a class="dropdown-item" asp-area="" asp-controller="CareLevel" asp-action="Index">CareLevel</a>
+                                <a class="dropdown-item" asp-area="" asp-controller="SunlightRequirement" asp-action="Index">Sunlight Requirement</a>
+                                <div class="dropdown-divider"></div>
+                                <a class="dropdown-item" asp-area="" asp-controller="ActionFrequency" asp-action="Index">Action Frequency</a>
+                                <a class="dropdown-item" asp-area="" asp-controller="ActionType" asp-action="Index">Action Type</a>
+                                <a class="dropdown-item" asp-area="" asp-controller="Season" asp-action="Index">Season</a>
+                                <a class="dropdown-item" asp-area="" asp-controller="Fertilize" asp-action="Index">Fertilize</a>
+                            </div>
+                        </li>
+
                     </ul>
-                    <partial name ="_LoginPartial" />
+                    <partial name="_LoginPartial" />
                 </div>
             </div>
         </nav>

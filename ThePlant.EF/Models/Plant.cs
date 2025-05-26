@@ -21,11 +21,11 @@ namespace ThePlant.EF.Models
 
         [MaxLength(200)]
         public string? ScientificTitle { get; set; }
-        public string? URL { get; set; }
 
         public virtual ICollection<UserPlant>? UserPlants { get; set; }
         public virtual ICollection<PlantCareInstruction>? PlantCareInstructions { get; set; }
         public virtual ICollection<PlantOverview>? PlantOverviews { get; set; }
+        public virtual ICollection<PlantImage>? PlantImages { get; set; }
 
     }
 }
