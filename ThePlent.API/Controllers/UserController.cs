@@ -35,7 +35,7 @@ namespace ThePlant.API.Controllers
         {
             if (loginRequest == null || string.IsNullOrEmpty(loginRequest.Username) || string.IsNullOrEmpty(loginRequest.Password))
             {
-                return BadRequest("Username and password are required for login.");
+                return BadRequest("UserName and password are required for login.");
             }
 
             var result = await _userService.LoginAdmin(loginRequest.Username, loginRequest.Password);
@@ -58,7 +58,7 @@ namespace ThePlant.API.Controllers
         {
             if (loginRequest == null || string.IsNullOrEmpty(loginRequest.Username) || string.IsNullOrEmpty(loginRequest.Password))
             {
-                return BadRequest("Username and password are required for login.");
+                return BadRequest("UserName and password are required for login.");
             }
 
             var result = await _userService.LoginUser(loginRequest.Username, loginRequest.Password);

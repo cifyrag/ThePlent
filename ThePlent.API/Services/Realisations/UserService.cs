@@ -56,10 +56,10 @@ public class UserService : IUserService
         {
             if (string.IsNullOrEmpty(username) || string.IsNullOrEmpty(password))
             {
-                return Error.Validation("Username and password are required.");
+                return Error.Validation("UserName and password are required.");
             }
 
-            var userResult = await _userRepository.GetSingleAsync<User>(u => u.Username == username && u.IsAdmin == false); 
+            var userResult = await _userRepository.GetSingleAsync<User>(u => u.UserName == username && u.IsAdmin == false); 
 
             if (userResult.IsError)
             {
@@ -93,10 +93,10 @@ public class UserService : IUserService
         {
             if (string.IsNullOrEmpty(username) || string.IsNullOrEmpty(password))
             {
-                return Error.Validation("Username and password are required.");
+                return Error.Validation("UserName and password are required.");
             }
 
-            var userResult = await _userRepository.GetSingleAsync<User>(u => u.Username == username && u.IsAdmin == true); 
+            var userResult = await _userRepository.GetSingleAsync<User>(u => u.UserName == username && u.IsAdmin == true); 
 
             if (userResult.IsError)
             {
@@ -145,13 +145,12 @@ public class UserService : IUserService
     {
          try
         {
-            if (userData == null || string.IsNullOrEmpty(userData.Username) || string.IsNullOrEmpty(userData.Email)) // Add other required fields check
+            if (userData == null || string.IsNullOrEmpty(userData.UserName) || string.IsNullOrEmpty(userData.Email)) 
             {
                 return Error.Validation("Valid user data is required for registration.");
             }
 
-            // Optional: Check if username or email already exists
-            var existingUserResult = await _userRepository.ExistsAsync(u => u.Username == userData.Username || u.Email == userData.Email);
+            var existingUserResult = await _userRepository.ExistsAsync(u => u.UserName == userData.UserName || u.Email == userData.Email);
 
             if (existingUserResult.IsError)
             {
@@ -160,11 +159,11 @@ public class UserService : IUserService
 
             if (existingUserResult.Value)
             {
-                return Error.Validation("Username or email already exists.");
+                return Error.Validation("UserName or email already exists.");
             }
 
-            // Placeholder for password hashing
-            userData.Password = HashPassword(userData.Password); // Assuming PasswordHash property
+            userData.Password = HashPassword(userData.Password);
+            userData.IsAdmin = false;
 
             var result = await _userRepository.AddAsync(userData);
 
