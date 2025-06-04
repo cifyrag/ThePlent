@@ -16,14 +16,10 @@
 
     <div class="col-md-4">
         <label for="category" class="form-label">Category</label>
-        <select class="form-select" id="category" name="category">
-            <option value="">All Categories</option>
-            @foreach (var cat in filterModel?.Categories ?? new List<string>())
-            {
-           //     <option value="@cat" @(cat == filterModel?.CurrentCategory ? "selected" : "")>@cat</option>
-            }
-        </select>
+        <input type="text" class="form-control" id="category" name="category"
+               value="@filterModel?.CurrentCategory" placeholder="Enter category...">
     </div>
+
 
     <div class="col-md-4">
         <label for="careFrequency" class="form-label">Care Frequency (times per week)</label>

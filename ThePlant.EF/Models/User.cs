@@ -9,7 +9,7 @@ using ThePlant.EF.Models.Enam;
 
 namespace ThePlant.EF.Models
 {
-    public class User :  IdentityUser
+    public class User 
     {
         [Key]
         public Guid UserId { get; set; } = Guid.NewGuid();

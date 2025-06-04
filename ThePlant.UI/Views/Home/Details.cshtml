@@ -1,0 +1,70 @@
+﻿@model ThePlant.EF.Models.Plant
+
+@{
+    ViewData["Title"] = Model.PlantName;
+    var imageUrl = Model.PlantImages?.FirstOrDefault()?.URL;
+    var overview = Model.PlantOverviews?.FirstOrDefault()?.Description;
+}
+
+<div class="card shadow border-0 mt-4">
+    <div class="card-header bg-success text-white py-4 text-center">
+        <h2 class="text-uppercase">@Model.PlantName</h2>
+        <p class="text-white-50 mb-0">
+            Scientific Title: <i>@(Model.ScientificTitle ?? "N/A")</i>
+        </p>
+        <span class="badge bg-light text-dark mt-2">Category: @Model.Category</span>
+    </div>
+
+    <div class="card-body">
+        <div class="row mb-4">
+            <div class="col-md-5 text-center">
+                @if (!string.IsNullOrEmpty(imageUrl))
+                {
+                    <img src="@imageUrl" class="img-fluid rounded" style="max-height: 300px;" alt="@Model.PlantName" />
+                }
+                else
+                {
+                    <div class="bg-light d-flex align-items-center justify-content-center rounded" style="height: 300px;">
+                        <span class="text-muted">No Image Available</span>
+                    </div>
+                }
+            </div>
+            <div class="col-md-7">
+                <h5 class="text-muted">Overview</h5>
+                <p>@(string.IsNullOrEmpty(overview) ? "No overview available." : overview)</p>
+            </div>
+        </div>
+
+        <h4 class="mb-3">Care Instructions</h4>
+        @if (Model.PlantCareInstructions != null && Model.PlantCareInstructions.Any())
+        {
+            <table class="table table-bordered table-striped">
+                <thead class="table-light">
+                    <tr>
+                        <th>Description</th>
+                        <th>Frequency (times/week)</th>
+                        <th>Note</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var instruction in Model.PlantCareInstructions)
+                    {
+                        <tr>
+                            <td>@instruction.Description</td>
+                            <td>@instruction.FrequencyRecommended</td>
+                            <td>@(string.IsNullOrEmpty(instruction.Note) ? "-" : instruction.Note)</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+        else
+        {
+            <div class="alert alert-info">No care instructions available.</div>
+        }
+
+        <div class="mt-4">
+            <a href="@Url.Action("Index", "Home")" class="btn btn-outline-secondary">Back to All Plants</a>
+        </div>
+    </div>
+</div>

@@ -31,8 +31,12 @@ public class HomeController : Controller
             Categories = categories
         };
 
-
-        var plantsQuery = _context.Plants.AsQueryable();
+        // Include the related tables here
+        var plantsQuery = _context.Plants
+            .Include(p => p.PlantCareInstructions)
+            .Include(p => p.PlantOverviews)
+            .Include(p => p.PlantImages)
+            .AsQueryable();
 
         if (!string.IsNullOrEmpty(searchTerm))
         {
@@ -41,8 +45,9 @@ public class HomeController : Controller
 
         if (!string.IsNullOrEmpty(category))
         {
-            plantsQuery = plantsQuery.Where(p => p.Category == category);
+            plantsQuery = plantsQuery.Where(p => p.Category != null && p.Category.Contains(category));
         }
+
 
         if (careFrequency.HasValue)
         {
@@ -70,6 +75,7 @@ public class HomeController : Controller
         return View(plant);
     }
 
+  
 
     public IActionResult Privacy()
     {
