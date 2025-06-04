@@ -22,7 +22,9 @@ public class DependencyRegistration
         services.AddScoped<ISubscriptionsService, SubscriptionsService>();
         services.AddScoped<IUserService, UserService>();
         services.AddScoped<ІUserGardenService, UserGardenService>();
-        
+        services.AddScoped<IUserPlantService, UserPlantService>();
+
+
         return services;
     }
 }
