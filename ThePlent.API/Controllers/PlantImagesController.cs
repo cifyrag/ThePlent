@@ -18,7 +18,7 @@ namespace ThePlant.API.Controllers
         }
 
         [HttpPost]
- 
+
         public async Task<ActionResult<PlantImage>> AddImage([FromBody] PlantImage imageData)
         {
             if (imageData == null)
@@ -42,8 +42,17 @@ namespace ThePlant.API.Controllers
             return !result.IsError ? Ok(result.Value) : BadRequest(result.Error);
         }
 
+        [HttpGet("plant/{plantId}")] // New GET endpoint
+        public async Task<ActionResult<IEnumerable<PlantImage>>> GetImagesByPlantId(Guid plantId)
+        {
+            var result = await _plantImagesService.GetImagesByPlantId(plantId);
+
+            return !result.IsError ? Ok(result.Value) : BadRequest(result.Error);
+        }
+
+
         [HttpPut]
-     
+
         public async Task<ActionResult> UpdateImage([FromBody] PlantImage imageData)
         {
             if (imageData == null)
@@ -55,7 +64,7 @@ namespace ThePlant.API.Controllers
         }
 
         [HttpDelete("{id}")]
-       
+
         public async Task<ActionResult> RemoveImage(Guid id)
         {
             var result = await _plantImagesService.RemoveImage(id);

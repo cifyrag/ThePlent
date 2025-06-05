@@ -2,6 +2,7 @@
 using ThePlant.EF.Models;
 using ThePlant.EF.Repository;
 using ThePlant.EF.Utils;
+using System.Linq; // Add this using directive for .Any()
 
 namespace ThePlant.API.Services.Realisations
 {
@@ -55,6 +56,35 @@ namespace ThePlant.API.Services.Realisations
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error retrieving plant image.");
+                return Error.Unexpected();
+            }
+        }
+
+        public async Task<Result<IEnumerable<PlantImage>>> GetImagesByPlantId(Guid plantId)
+        {
+            try
+            {
+                var result = await _plantImageRepository.GetListAsync<PlantImage>(img => img.PlantId == plantId);
+
+                if (result.IsError)
+                {
+                    return result.Error;
+                }
+
+                // Check if the result.Value is null or empty after a successful repository call
+                // If you want to return NotFound error for no images found, keep this check.
+                // Otherwise, an empty IEnumerable<PlantImage> is also a valid success case.
+                if (result.Value == null || !result.Value.Any())
+                {
+                    return Error.NotFound($"No images found for Plant with ID {plantId}.");
+                }
+
+                // Corrected line: Return the 'result' object itself, as it's already of type Result<IEnumerable<PlantImage>>
+                return result;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error retrieving plant images by Plant ID.");
                 return Error.Unexpected();
             }
         }
