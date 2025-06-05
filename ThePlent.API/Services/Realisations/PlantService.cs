@@ -2,6 +2,7 @@
 using ThePlant.EF.Models;
 using ThePlant.EF.Repository;
 using ThePlant.EF.Utils;
+using System.Linq;
 
 namespace ThePlant.API.Services.Realisations;
 
@@ -12,8 +13,9 @@ public class PlantService : IPlantService
 {
     private readonly ILogger<PlantService> _logger;
     private readonly IGenericRepository<Plant> _plantRepository; 
-    private readonly IGenericRepository<PlantCareInstruction> _plantCareInstructionRepository; 
-    
+    private readonly IGenericRepository<PlantCareInstruction> _plantCareInstructionRepository;
+    private readonly IGenericRepository<PlantImage> _plantImageRepository;
+
     /// <summary>
     /// Initializes a new instance of the PlantService class.
     /// </summary>
@@ -23,11 +25,13 @@ public class PlantService : IPlantService
     public PlantService(
         ILogger<PlantService> logger,
         IGenericRepository<Plant> plantRepository,
-        IGenericRepository<PlantCareInstruction> plantCareInstructionRepository)
+        IGenericRepository<PlantCareInstruction> plantCareInstructionRepository,
+        IGenericRepository<PlantImage> plantImageRepository)
     {
         _logger = logger;
         _plantRepository = plantRepository;
         _plantCareInstructionRepository = plantCareInstructionRepository;
+        _plantImageRepository = plantImageRepository;
     }
 
     /// <summary>
@@ -58,6 +62,38 @@ public class PlantService : IPlantService
              _logger.LogError(ex, "An error occurred while adding a plant.");
              return Error.Unexpected();
          }
+    }
+
+    public async Task<Result<IEnumerable<PlantImage>>> GetPlantImages(Guid plantId)
+    {
+        try
+        {
+            // First, check if the plant actually exists to provide a more specific error
+            var plantExists = await _plantRepository.GetSingleAsync<Plant>(p => p.PlantId == plantId);
+            if (plantExists.IsError)
+            {
+                return plantExists.Error; // Propagate repository errors
+            }
+            if (plantExists.Value == null)
+            {
+                return Error.NotFound($"Plant with ID {plantId} not found.");
+            }
+
+            // Now, get the images for that plant
+            var imagesResult = await _plantImageRepository.GetListAsync<PlantImage>(pi => pi.PlantId == plantId);
+
+            if (!imagesResult.IsError)
+            {
+                return imagesResult; // Returns the Result<IEnumerable<PlantImage>>
+            }
+
+            return imagesResult.Error; // Propagate repository errors
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, $"Error fetching images for plant ID {plantId}.");
+            return Error.Unexpected();
+        }
     }
 
     /// <summary>

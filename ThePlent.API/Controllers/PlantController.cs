@@ -160,5 +160,27 @@ namespace ThePlant.API.Controllers
             }
             return BadRequest(result.Error);
         }
+
+        /// <summary>
+        /// Gets all image URLs for a specific plant by its identifier.
+        /// </summary>
+        /// <param name="plantId">The identifier of the plant.</param>
+        /// <returns>An ActionResult containing a collection of PlantImage objects or an error.</returns>
+        [HttpGet("{plantId}/images")] // New route: /api/Plant/{plantId}/images
+        [AllowAnonymous]
+        public async Task<ActionResult<IEnumerable<PlantImage>>> GetPlantImages(Guid plantId)
+        {
+            var result = await _plantService.GetPlantImages(plantId);
+
+            if (!result.IsError)
+            {
+                // If you only want URLs, you can select them here:
+                // return Ok(result.Value.Select(pi => pi.URL));
+                // Otherwise, return the full PlantImage objects:
+                return Ok(result.Value);
+            }
+            return BadRequest(result.Error);
+        }
+
     }
 }

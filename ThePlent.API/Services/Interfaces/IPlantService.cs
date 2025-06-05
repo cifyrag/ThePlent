@@ -54,5 +54,7 @@ public interface IPlantService
         /// </summary>
         /// <param name="plantId">The identifier of the plant.</param>
         /// <returns>The PlantCareInstructions object for the plant, or null if not found.</returns>
-        Task<Result<PlantCareInstruction>> ViewPlantCareInstructions(Guid plantId); 
-    }
+        Task<Result<PlantCareInstruction>> ViewPlantCareInstructions(Guid plantId);
+
+        Task<Result<IEnumerable<PlantImage>>> GetPlantImages(Guid plantId);
+}

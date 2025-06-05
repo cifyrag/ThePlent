@@ -1,5 +1,7 @@
 ﻿using ThePlant.API.Services.Interfaces;
 using ThePlant.API.Services.Realisations;
+using ThePlant.EF.Models;
+using ThePlant.EF.Repository;
 using ThePlant.EF.Settings;
 
 namespace ThePlant.API.Services;
@@ -23,6 +25,8 @@ public class DependencyRegistration
         services.AddScoped<IUserService, UserService>();
         services.AddScoped<ІUserGardenService, UserGardenService>();
         services.AddScoped<IUserPlantService, UserPlantService>();
+        services.AddScoped(typeof(IGenericRepository<PlantImage>), typeof(GenericRepository<PlantImage>));
+        services.AddScoped<IPlantService, PlantService>();
 
 
         return services;
