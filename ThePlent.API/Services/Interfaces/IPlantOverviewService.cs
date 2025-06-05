@@ -25,4 +25,11 @@ public interface IPlantOverviewService
     /// <param name="overviewId">The identifier of the plant overview to delete.</param>
     /// <returns>True if the deletion was successful, false otherwise.</returns>
     Task<Result<bool>> DeletePlant_Overview(Guid overviewId);
+
+    /// <summary>
+    /// Gets all plant overviews associated with a specific Plant ID.
+    /// </summary>
+    /// <param name="plantId">The identifier of the Plant.</param>
+    /// <returns>An enumerable collection of PlantOverview objects for the Plant.</returns>
+    Task<Result<System.Collections.Generic.IEnumerable<PlantOverview>>> GetPlantOverviewsByPlantId(Guid plantId);
 }

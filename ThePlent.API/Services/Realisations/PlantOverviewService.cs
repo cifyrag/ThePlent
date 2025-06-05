@@ -120,5 +120,28 @@ public class PlantOverviewService : IPlantOverviewService
              _logger.LogError(ex, "An error occurred while deleting a plant overview.");
              return Error.Unexpected();
          }
+
+    }
+    /// <summary>
+    /// Gets all plant overviews associated with a specific Plant ID.
+    /// </summary>
+    /// <param name="plantId">The identifier of the Plant.</param>
+    /// <returns>An enumerable collection of PlantOverview objects for the Plant, or an error.</returns>
+    public async Task<Result<System.Collections.Generic.IEnumerable<PlantOverview>>> GetPlantOverviewsByPlantId(Guid plantId)
+    {
+        try
+        {
+            var result = await _plantOverviewRepository.GetListAsync<PlantOverview>(filter: po => po.PlantId == plantId);
+            if (!result.IsError)
+            {
+                return result;
+            }
+            return result.Error;
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "An error occurred while getting plant overviews by Plant ID.");
+            return Error.Unexpected();
+        }
     }
 }

@@ -84,5 +84,27 @@ namespace ThePlant.API.Controllers
             }
             return BadRequest(result.Error);
         }
+        /// <summary>
+        /// Gets all plant overviews for a specific Plant ID.
+        /// </summary>
+        /// <param name="plantId">The identifier of the Plant (from route).</param>
+        /// <returns>An ActionResult containing the collection of plant overview objects for the Plant or an error.</returns>
+        [HttpGet("plant/{plantId}")]
+        public async Task<ActionResult<IEnumerable<PlantOverview>>> GetPlantOverviewsByPlantId(Guid plantId)
+        {
+            if (plantId.Equals(Guid.Empty))
+            {
+                return BadRequest("Valid Plant ID is required.");
+            }
+
+            var result = await _plantOverviewService.GetPlantOverviewsByPlantId(plantId);
+
+            if (!result.IsError)
+            {
+                return Ok(result.Value);
+            }
+            return BadRequest(result.Error);
+        }
+
     }
 }
