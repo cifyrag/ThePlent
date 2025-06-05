@@ -27,6 +27,8 @@ public class DependencyRegistration
         services.AddScoped<IUserPlantService, UserPlantService>();
         services.AddScoped(typeof(IGenericRepository<PlantImage>), typeof(GenericRepository<PlantImage>));
         services.AddScoped<IPlantService, PlantService>();
+        services.AddScoped<IPlantImagesService, PlantImagesService>();
+
 
 
         return services;
