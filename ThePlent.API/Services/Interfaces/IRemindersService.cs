@@ -57,5 +57,12 @@ public interface IRemindersService
         /// </summary>
         /// <param name="reminderData">The updated reminder data.</param>
         /// <returns>True if the update was successful, false otherwise.</returns>
-        Task<Result<bool>> UpdateReminder(Reminder reminderData); 
-    }
+        Task<Result<bool>> UpdateReminder(Reminder reminderData);
+
+    /// <summary>
+    /// Gets all reminders associated with a specific UserPlant ID.
+    /// </summary>
+    /// <param name="userPlantId">The identifier of the UserPlant.</param>
+    /// <returns>An enumerable collection of Reminder objects for the UserPlant.</returns>
+    Task<Result<System.Collections.Generic.IEnumerable<Reminder>>> GetRemindersByUserPlantId(Guid userPlantId);
+}

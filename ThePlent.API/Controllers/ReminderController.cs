@@ -190,6 +190,29 @@ namespace ThePlant.API.Controllers
         }
 
         /// <summary>
+        /// Gets all reminders for a specific UserPlant ID.
+        /// </summary>
+        /// <param name="userPlantId">The identifier of the UserPlant (from route).</param>
+        /// <returns>An ActionResult containing the collection of reminder objects for the UserPlant or an error.</returns>
+        [HttpGet("userplant/{userPlantId}")]
+        public async Task<ActionResult<IEnumerable<Reminder>>> GetRemindersByUserPlantId(Guid userPlantId)
+        {
+            if (userPlantId.Equals(Guid.Empty))
+            {
+                return BadRequest("Valid UserPlant ID is required.");
+            }
+
+            var result = await _remindersService.GetRemindersByUserPlantId(userPlantId);
+
+            if (!result.IsError)
+            {
+                return Ok(result.Value);
+            }
+            return BadRequest(result.Error);
+        }
+
+
+        /// <summary>
         /// Represents the request body for importing a reminder to a calendar.
         /// </summary>
         public class ImportToCalendarRequest

@@ -235,4 +235,29 @@ public class RemindersService : IRemindersService
              return Error.Unexpected();
          }
     }
+
+    /// <summary>
+    /// Gets all reminders associated with a specific UserPlant ID.
+    /// </summary>
+    /// <param name="userPlantId">The identifier of the UserPlant.</param>
+    /// <returns>An enumerable collection of Reminder objects for the UserPlant, or an error.</returns>
+    public async Task<Result<System.Collections.Generic.IEnumerable<Reminder>>> GetRemindersByUserPlantId(Guid userPlantId)
+    {
+        try
+        {
+            var result = await _reminderRepository.GetListAsync<Reminder>(filter: r => r.UserPlantId == userPlantId);
+
+            if (!result.IsError)
+            {
+                return result;
+            }
+
+            return result.Error;
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "An error occurred while getting reminders by UserPlant ID.");
+            return Error.Unexpected();
+        }
+    }
 }
