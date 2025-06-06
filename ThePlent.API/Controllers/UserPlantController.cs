@@ -42,13 +42,11 @@ namespace ThePlant.API.Controllers
         }
 
         [HttpPut("{userPlantId}")] // Added Update endpoint
-        public async Task<ActionResult<UserPlant>> UpdateUserPlant(Guid userPlantId, [FromBody] UserPlant userPlant)
+        public async Task<ActionResult<UserPlant>> UpdateUserPlant([FromBody] UserPlant userPlant)
         {
             if (userPlant == null)
                 return BadRequest("UserPlant data is required.");
 
-            if (userPlantId != userPlant.UserPlantId)
-                return BadRequest("UserPlant ID in URL does not match ID in body.");
 
             var result = await _userPlantService.UpdateUserPlant(userPlant);
 
