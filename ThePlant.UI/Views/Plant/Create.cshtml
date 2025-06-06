@@ -1,0 +1,246 @@
+﻿@model ThePlant.EF.Models.Plant
+
+@{
+    ViewData["Title"] = "Create Plant";
+}
+
+<div class="row">
+    <div class="col-md-8 mx-auto rounded border p-3">
+        <h2 class="text-center mb-5">Create New Plant</h2>
+
+        <form asp-action="Create" method="post" id="plant-form">
+            @* Removed enctype="multipart/form-data" as we are not uploading files *@
+            <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+            <div class="row mb-3">
+                <label class="col-sm-4 col-form-label" for="PlantName">Plant Name</label>
+                <div class="col-sm-8">
+                    <input class="form-control" asp-for="PlantName" id="PlantName" />
+                    <span asp-validation-for="PlantName" class="text-danger"></span>
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <label class="col-sm-4 col-form-label" for="Category">Category</label>
+                <div class="col-sm-8">
+                    <input class="form-control" asp-for="Category" id="Category" />
+                    <span asp-validation-for="Category" class="text-danger"></span>
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <label class="col-sm-4 col-form-label" for="ScientificTitle">Scientific Title</label>
+                <div class="col-sm-8">
+                    <input class="form-control" asp-for="ScientificTitle" id="ScientificTitle" />
+                    <span asp-validation-for="ScientificTitle" class="text-danger"></span>
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <label class="col-sm-4 col-form-label" for="imageUrl">Plant Image URL</label> @* Changed label *@
+                <div class="col-sm-8">
+                    <input type="text" class="form-control" id="imageUrl" name="imageUrl" value="" placeholder="Enter image URL" /> @* Changed type to text and name to imageUrl *@
+                    <span class="text-danger" data-valmsg-for="imageUrl"></span> @* Adjusted validation message span *@
+                    <small class="form-text text-muted">Enter a URL for the plant image.</small>
+                    <div class="mt-2">
+                        <img id="previewImage" src="#" style="max-height: 150px; display: none;" class="rounded border" />
+                    </div>
+                </div>
+            </div>
+
+            <hr />
+            <h4>Care Instructions</h4>
+            <div id="careInstructionsContainer">
+                <p id="noCareInstructionsMessage">No care instructions added yet.</p>
+            </div>
+            <button type="button" class="btn btn-secondary mb-4" onclick="addCareInstruction()">Add Instruction</button>
+
+            <hr />
+            <h4>Overviews</h4>
+            <div id="overviewsContainer">
+                <p id="noOverviewsMessage">No overviews added yet.</p>
+            </div>
+            <button type="button" class="btn btn-secondary mb-4" onclick="addOverview()">Add Overview</button>
+
+            <div class="row mt-4">
+                <div class="offset-sm-4 col-sm-4 d-grid">
+                    <button type="submit" class="btn btn-primary" id="submit-button">Create Plant</button>
+                </div>
+                <div class="col-sm-4 d-grid">
+                    <a class="btn btn-outline-primary" id="cancel-button" asp-action="Index" role="button">Cancel</a>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const cancelButton = document.getElementById("cancel-button");
+            const submitButton = document.getElementById("submit-button");
+            const form = document.getElementById("plant-form");
+
+            cancelButton.addEventListener("click", function (e) {
+                e.preventDefault();
+                Swal.fire({
+                    title: "Are you sure?",
+                    text: "Your changes will not be saved!",
+                    icon: "warning",
+                    showCancelButton: true,
+                    confirmButtonText: "Yes, leave!",
+                    cancelButtonText: "No, stay!",
+                    customClass: {
+                        confirmButton: 'btn btn-primary me-2',
+                        cancelButton: 'btn btn-danger'
+                    },
+                    buttonsStyling: false
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        window.location.href = '@Url.Action("Index", "Plant")';
+                    }
+                });
+            });
+
+            submitButton.addEventListener("click", function (e) {
+                e.preventDefault();
+                Swal.fire({
+                    title: "Create new plant?",
+                    text: "Are you sure you want to create this new plant?",
+                    icon: "question",
+                    showCancelButton: true,
+                    confirmButtonText: "Yes, create!",
+                    cancelButtonText: "No, cancel!",
+                    customClass: {
+                        confirmButton: 'btn btn-primary me-2',
+                        cancelButton: 'btn btn-danger'
+                    },
+                    buttonsStyling: false
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        form.submit();
+                    }
+                });
+            });
+
+            // Preview image from URL input
+            const imageUrlInput = document.getElementById("imageUrl");
+            const previewImage = document.getElementById("previewImage");
+
+            imageUrlInput.addEventListener("input", function () { // Use 'input' event for live updates
+                const url = this.value;
+                if (url) {
+                    previewImage.src = url;
+                    previewImage.style.display = "block";
+                    // Optional: Add an error handler for broken image URLs
+                    previewImage.onerror = function () {
+                        previewImage.style.display = "none";
+                        // You could also display a placeholder or an error message here
+                    };
+                } else {
+                    previewImage.style.display = "none";
+                    previewImage.src = "#"; // Reset src when URL is empty
+                }
+            });
+
+            // If you are loading an existing plant for edit, and it has an image URL
+            // you might want to show the preview on page load. This is for 'Create' but good to keep in mind for 'Edit'.
+            if (imageUrlInput.value) {
+                previewImage.src = imageUrlInput.value;
+                previewImage.style.display = "block";
+            }
+        });
+
+        function addCareInstruction() {
+            const container = document.getElementById('careInstructionsContainer');
+            const noCareInstructionsMessage = document.getElementById('noCareInstructionsMessage');
+            if (noCareInstructionsMessage) {
+                noCareInstructionsMessage.remove();
+            }
+            const index = container.querySelectorAll('.care-instruction-item').length;
+
+            const div = document.createElement('div');
+            div.classList.add('card', 'mb-2', 'p-2', 'border', 'rounded', 'care-instruction-item');
+            div.innerHTML = `
+                                <input type="hidden" name="plantCareInstructions[${index}].PlantCareInstructionId" value="${'00000000-0000-0000-0000-000000000000'}" />
+                                <input type="hidden" name="plantCareInstructions[${index}].PlantId" value="00000000-0000-0000-0000-000000000000" /> <div class="mb-2">
+                                    <label>Description</label>
+                                    <input type="text" name="plantCareInstructions[${index}].Description" class="form-control" value="" />
+                                </div>
+                                <div class="mb-2">
+                                    <label>Frequency Recommended</label>
+                                    <input type="text" name="plantCareInstructions[${index}].FrequencyRecommended" class="form-control" value="" />
+                                </div>
+                                <div class="mb-2">
+                                    <label>Note</label>
+                                    <input type="text" name="plantCareInstructions[${index}].Note" class="form-control" value="" />
+                                </div>
+                                <button type="button" class="btn btn-danger btn-sm mt-2" onclick="removeParentDiv(this)">Remove</button>
+                            `;
+            container.appendChild(div);
+        }
+
+        function addOverview() {
+            const container = document.getElementById('overviewsContainer');
+            const noOverviewsMessage = document.getElementById('noOverviewsMessage');
+            if (noOverviewsMessage) {
+                noOverviewsMessage.remove();
+            }
+            const index = container.querySelectorAll('.overview-item').length;
+
+            const div = document.createElement('div');
+            div.classList.add('card', 'mb-2', 'p-2', 'border', 'rounded', 'overview-item');
+            div.innerHTML = `
+                                <input type="hidden" name="plantOverviews[${index}].PlantOverviewId" value="${'00000000-0000-0000-0000-000000000000'}" />
+                                <input type="hidden" name="plantOverviews[${index}].PlantId" value="00000000-0000-0000-0000-000000000000" /> <div class="mb-2">
+                                    <label>Overview Type</label>
+                                    <select name="plantOverviews[${index}].OverviewType" class="form-control">
+        @foreach (var type in Enum.GetValues(typeof(ThePlant.EF.Models.Enam.OverviewType)))
+        {
+                                            <option value="@type">@type.ToString()</option>
+        }
+                                    </select>
+                                </div>
+                                <div class="mb-2">
+                                    <label>Description</label>
+                                    <input type="text" name="plantOverviews[${index}].Description" class="form-control" value="" />
+                                </div>
+                                <button type="button" class="btn btn-danger btn-sm mt-2" onclick="removeParentDiv(this)">Remove</button>
+                            `;
+            container.appendChild(div);
+        }
+
+        function removeParentDiv(button) {
+            button.closest('.card').remove();
+            reindexElements('careInstructionsContainer', 'plantCareInstructions', 'care-instruction-item');
+            reindexElements('overviewsContainer', 'plantOverviews', 'overview-item');
+
+            checkAndAddNoMessage('careInstructionsContainer', 'noCareInstructionsMessage', 'No care instructions added yet.');
+            checkAndAddNoMessage('overviewsContainer', 'noOverviewsMessage', 'No overviews added yet.');
+        }
+
+        function reindexElements(containerId, namePrefix, itemClass) {
+            const container = document.getElementById(containerId);
+            const items = container.querySelectorAll(`.${itemClass}`);
+            items.forEach((item, index) => {
+                item.querySelectorAll('[name^="' + namePrefix + '["]').forEach(input => {
+                    const originalName = input.getAttribute('name');
+                    const newName = originalName.replace(/\[\d+\]/, '[' + index + ']');
+                    input.setAttribute('name', newName);
+                });
+            });
+        }
+
+        function checkAndAddNoMessage(containerId, messageId, messageText) {
+            const container = document.getElementById(containerId);
+            if (container.querySelectorAll('.card').length === 0 && !document.getElementById(messageId)) {
+                const p = document.createElement('p');
+                p.id = messageId;
+                p.textContent = messageText;
+                container.appendChild(p);
+            }
+        }
+    </script>
+}
