@@ -1,6 +1,7 @@
 ﻿
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
+using System.Security.Cryptography;
 using System.Text;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
@@ -26,6 +27,11 @@ public class UserService : IUserService
     private readonly SigningCredentials _signingCredentials;
     private readonly ILogger<UserService> _logger;
     private readonly IGenericRepository<User> _userRepository; // Repository for User
+    private const int SALT_SIZE = 128 / 8;
+    private const int KEY_SIZE = 256 / 8;
+    private const int ITERATIONS = 1000;
+    private const char DELIMITER = ';';
+    private static readonly HashAlgorithmName _hashAlgorithm = HashAlgorithmName.SHA256;
 
     /// <summary>
     /// Initializes a new instance of the UserService class.
@@ -53,38 +59,38 @@ public class UserService : IUserService
     public async Task<Result<string>> LoginUser(string username, string password)
     {
          try
-        {
-            if (string.IsNullOrEmpty(username) || string.IsNullOrEmpty(password))
-            {
-                return Error.Validation("UserName and password are required.");
-            }
+         {
+             if (string.IsNullOrEmpty(username) || string.IsNullOrEmpty(password))
+             {
+                 return Error.Validation("UserName and password are required.");
+             }
 
-            var userResult = await _userRepository.GetSingleAsync<User>(u => u.UserName == username && u.IsAdmin == false); 
+             var userResult = await _userRepository.GetSingleAsync<User>(u => u.UserName == username && u.IsAdmin == false); 
 
-            if (userResult.IsError)
-            {
+             if (userResult.IsError)
+             {
                  return userResult.Error;
-            }
+             }
 
-            if (userResult?.Value == null)
-            {
-                return Error.NotFound("User not found.");
-            }
+             if (userResult?.Value == null)
+             {
+                 return Error.NotFound("User not found.");
+             }
 
-            bool isPasswordValid = VerifyPasswordHash(password, userResult.Value.Password); 
+             bool isPasswordValid = VerifyPasswordHash(password, userResult.Value.Password); 
             
-            if (!isPasswordValid)
-            {
-                return Error.Unauthorized("Invalid credentials.");
-            }
+             if (!isPasswordValid)
+             {
+                 return Error.Unauthorized("Invalid credentials.");
+             }
 
-            return IssueToken(userResult.Value, Roles.User);
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex, "An error occurred during user login.");
-            return Error.Unexpected();
-        }
+             return IssueToken(userResult.Value, Roles.User);
+         }
+         catch (Exception ex)
+         {
+             _logger.LogError(ex, "An error occurred during user login.");
+             return Error.Unexpected();
+         }
     }
     
     public async Task<Result<string>> LoginAdmin(string username, string password)
@@ -194,18 +200,14 @@ public class UserService : IUserService
             {
                 return Error.Validation("Login token is required.");
             }
+            Guid userIdFromToken = ValidateAndGetUserIdFromToken(token); 
 
-            // Placeholder for token validation and user retrieval logic
-            // This would involve verifying the token's signature, expiration, etc.
-            // and extracting user information from the token.
-            Guid userIdFromToken = ValidateAndGetUserIdFromToken(token); // Placeholder method
-
-            if (userIdFromToken == Guid.Empty) // Assuming Guid.Empty indicates invalid token
+            if (userIdFromToken == Guid.Empty) 
             {
                  return Error.Unauthorized("Invalid or expired token.");
             }
 
-            var userResult = await _userRepository.GetSingleAsync<User>(u => u.UserId == userIdFromToken); // Assuming User has UserId
+            var userResult = await _userRepository.GetSingleAsync<User>(u => u.UserId == userIdFromToken);
 
             if (userResult.IsError)
             {
@@ -351,17 +353,36 @@ public class UserService : IUserService
         }
     }
 
-    // Placeholder methods for password hashing and token validation
     private string HashPassword(string password)
     {
-        // Implement actual password hashing here (e.g., using BCrypt, Argon2)
-        return $"hashed_{password}";
+        var salt = RandomNumberGenerator.GetBytes(SALT_SIZE);
+        var hash = Rfc2898DeriveBytes.Pbkdf2(
+            password, 
+            salt,
+            ITERATIONS, 
+            _hashAlgorithm, 
+            KEY_SIZE);
+
+        return string.Join(
+            DELIMITER, 
+            Convert.ToBase64String(salt),
+            Convert.ToBase64String(hash));
     }
 
     private bool VerifyPasswordHash(string password, string storedHash)
     {
-        // Implement actual password verification here
-        return storedHash == $"hashed_{password}";
+        var el = storedHash.Split(DELIMITER);
+        byte[] salt = Convert.FromBase64String(el[0]);
+        byte[] hash = Convert.FromBase64String(el[1]);
+
+        var hashInput = Rfc2898DeriveBytes.Pbkdf2(
+            password,
+            salt,
+            ITERATIONS, 
+            _hashAlgorithm, 
+            KEY_SIZE);
+
+        return CryptographicOperations.FixedTimeEquals(hash, hashInput);
     }
 
     private Guid ValidateAndGetUserIdFromToken(string token)
