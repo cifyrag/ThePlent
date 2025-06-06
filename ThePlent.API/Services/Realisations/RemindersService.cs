@@ -1,5 +1,4 @@
-﻿
-using ThePlant.API.Services.Interfaces;
+﻿using ThePlant.API.Services.Interfaces;
 using ThePlant.EF.Models;
 using ThePlant.EF.Models.Enam;
 using ThePlant.EF.Repository;
@@ -13,7 +12,7 @@ namespace ThePlant.API.Services.Realisations;
 public class RemindersService : IRemindersService
 {
     private readonly ILogger<RemindersService> _logger;
-    private readonly IGenericRepository<Reminder> _reminderRepository; 
+    private readonly IGenericRepository<Reminder> _reminderRepository;
 
     /// <summary>
     /// Initializes a new instance of the RemindersService class.
@@ -34,29 +33,29 @@ public class RemindersService : IRemindersService
     /// <returns>True if the reminder was marked as done successfully, or an error.</returns>
     public async Task<Result<bool>> MarkAsDone(Guid userId, Guid reminderId)
     {
-         try
-         {
-             var updateResult = await _reminderRepository.UpdateRangeAsync(
-                 filter: r =>  r.ReminderId == reminderId, 
-                 updateExpression: calls => calls.SetProperty(r => r.Status, ReminderStatus.Completed) 
-             );
+        try
+        {
+            var updateResult = await _reminderRepository.UpdateRangeAsync(
+                filter: r => r.ReminderId == reminderId,
+                updateExpression: calls => calls.SetProperty(r => r.Status, ReminderStatus.Completed)
+            );
 
-             if (!updateResult.IsError)
-             {
-                 if (updateResult.Value == 0)
-                 {
-                     return Error.NotFound($"Reminder with ID {reminderId} for User ID {userId} not found.");
-                 }
-                 return true;
-             }
+            if (!updateResult.IsError)
+            {
+                if (updateResult.Value == 0)
+                {
+                    return Error.NotFound($"Reminder with ID {reminderId} for User ID {userId} not found.");
+                }
+                return true;
+            }
 
-             return updateResult.Error;
-         }
-         catch (Exception ex)
-         {
-             _logger.LogError(ex, "An error occurred while marking a reminder as done.");
-             return Error.Unexpected();
-         }
+            return updateResult.Error;
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "An error occurred while marking a reminder as done.");
+            return Error.Unexpected();
+        }
     }
 
     /// <summary>
@@ -68,17 +67,17 @@ public class RemindersService : IRemindersService
     /// <returns>True if the import was successful, or an error.</returns>
     public async Task<Result<bool>> ImportToCalendar(Guid userId, Guid reminderId, string calendarId = null)
     {
-         try
-         {
-             _logger.LogInformation($"User {userId} attempting to import reminder {reminderId} to calendar {calendarId ?? "default"}.");
+        try
+        {
+            _logger.LogInformation($"User {userId} attempting to import reminder {reminderId} to calendar {calendarId ?? "default"}.");
 
-             return true;
-         }
-         catch (Exception ex)
-         {
-             _logger.LogError(ex, "An error occurred while importing a reminder to calendar.");
-             return Error.Unexpected();
-         }
+            return true;
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "An error occurred while importing a reminder to calendar.");
+            return Error.Unexpected();
+        }
     }
 
     /// <summary>
@@ -88,22 +87,22 @@ public class RemindersService : IRemindersService
     /// <returns>An enumerable collection of Reminder objects for the user, or an error.</returns>
     public async Task<Result<System.Collections.Generic.IEnumerable<Reminder>>> GetUserReminders(Guid userId)
     {
-         try
-         {
-             var result = await _reminderRepository.GetListAsync<Reminder>(filter: r => r.UserPlant.UserId == userId); 
+        try
+        {
+            var result = await _reminderRepository.GetListAsync<Reminder>(filter: r => r.UserPlant.UserId == userId);
 
-             if (!result.IsError)
-             {
-                 return result;
-             }
+            if (!result.IsError)
+            {
+                return result;
+            }
 
-             return result.Error;
-         }
-         catch (Exception ex)
-         {
-             _logger.LogError(ex, "An error occurred while getting user reminders.");
-             return Error.Unexpected();
-         }
+            return result.Error;
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "An error occurred while getting user reminders.");
+            return Error.Unexpected();
+        }
     }
 
     /// <summary>
@@ -113,66 +112,65 @@ public class RemindersService : IRemindersService
     /// <returns>The newly created Reminder object, or an error.</returns>
     public async Task<Result<Reminder>> CreateReminder(Reminder reminderData)
     {
-         try
-         {
-             if (reminderData == null)
-             {
-                 return Error.Validation("Reminder data cannot be null.");
-             }
+        try
+        {
+            if (reminderData == null)
+            {
+                return Error.Validation("Reminder data cannot be null.");
+            }
 
-             var result = await _reminderRepository.AddAsync(reminderData);
+            var result = await _reminderRepository.AddAsync(reminderData);
 
-             if (!result.IsError)
-             {
-                 return result.Value;
-             }
+            if (!result.IsError)
+            {
+                return result.Value;
+            }
 
-             return result.Error;
-         }
-         catch (Exception ex)
-         {
-             _logger.LogError(ex, "An error occurred while creating a reminder.");
-             return Error.Unexpected();
-         }
+            return result.Error;
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "An error occurred while creating a reminder.");
+            return Error.Unexpected();
+        }
     }
 
     /// <summary>
-    /// Deletes a reminder by its identifier for a user.
+    /// Deletes a reminder by its identifier.
     /// </summary>
-    /// <param name="userId">The identifier of the user.</param>
     /// <param name="reminderId">The identifier of the reminder to delete.</param>
     /// <returns>True if the deletion was successful, or an error.</returns>
-    public async Task<Result<bool>> DeleteReminder(Guid userId, Guid reminderId)
+    public async Task<Result<bool>> DeleteReminder(Guid reminderId)
     {
-         try
-         {
-             var reminderToRemoveResult = await _reminderRepository.GetSingleAsync<Reminder>(
-                 r => r.UserPlant.UserId == userId && r.ReminderId == reminderId); 
+        try
+        {
+            var reminderToRemoveResult = await _reminderRepository.GetSingleAsync<Reminder>(
+                r => r.ReminderId == reminderId);
 
-             if (reminderToRemoveResult.IsError)
-             {
-                 return reminderToRemoveResult.Error;
-             }
+            if (reminderToRemoveResult.IsError)
+            {
+                return reminderToRemoveResult.Error;
+            }
 
-             if (reminderToRemoveResult?.Value == null)
-             {
-                 return Error.NotFound($"Reminder with ID {reminderId} for User ID {userId} not found.");
-             }
+            if (reminderToRemoveResult?.Value == null)
+            {
+                return Error.NotFound($"Reminder with ID {reminderId} not found.");
+            }
 
-             var removeResult = await _reminderRepository.RemoveAsync(reminderToRemoveResult.Value);
+            var removeResult = await _reminderRepository.RemoveAsync(reminderToRemoveResult.Value);
 
-             if (!removeResult.IsError)
-             {
-                 return true;
-             }
+            if (!removeResult.IsError)
+            {
+                return true;
+            }
 
-             return removeResult.Error;
-         }
-         catch (Exception ex)
-         {
-             _logger.LogError(ex, "An error occurred while deleting a reminder.");
-             return Error.Unexpected();
-         }
+            return removeResult.Error;
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "An error occurred while deleting a reminder.");
+            return Error.Unexpected();
+        }
     }
 
     /// <summary>
@@ -183,27 +181,27 @@ public class RemindersService : IRemindersService
     /// <returns>An enumerable collection of upcoming Reminder objects for the user, or an error.</returns>
     public async Task<Result<System.Collections.Generic.IEnumerable<Reminder>>> GetUpcomingReminders(Guid userId, int timeframeInDays = 7)
     {
-         try
-         {
-             var upcomingDate = DateTime.UtcNow.AddDays(timeframeInDays);
+        try
+        {
+            var upcomingDate = DateTime.UtcNow.AddDays(timeframeInDays);
 
-             var result = await _reminderRepository.GetListAsync<Reminder>(
-                 filter: r => r.UserPlant.UserId == userId && r.DateOfReminder <= upcomingDate && (r.Status == ReminderStatus.Pending || r.Status == ReminderStatus.Snoozed),
-                 orderBy: q => q.OrderBy(r => r.DateOfReminder) 
-             );
+            var result = await _reminderRepository.GetListAsync<Reminder>(
+                filter: r => r.UserPlant.UserId == userId && r.DateOfReminder <= upcomingDate && (r.Status == ReminderStatus.Pending || r.Status == ReminderStatus.Snoozed),
+                orderBy: q => q.OrderBy(r => r.DateOfReminder)
+            );
 
-             if (!result.IsError)
-             {
-                 return result;
-             }
+            if (!result.IsError)
+            {
+                return result;
+            }
 
-             return result.Error;
-         }
-         catch (Exception ex)
-         {
-             _logger.LogError(ex, "An error occurred while getting upcoming reminders.");
-             return Error.Unexpected();
-         }
+            return result.Error;
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "An error occurred while getting upcoming reminders.");
+            return Error.Unexpected();
+        }
     }
 
     /// <summary>
@@ -213,27 +211,27 @@ public class RemindersService : IRemindersService
     /// <returns>True if the update was successful, or an error.</returns>
     public async Task<Result<bool>> UpdateReminder(Reminder reminderData)
     {
-         try
-         {
-             if (reminderData == null)
-             {
-                 return Error.Validation("Valid reminder data is required for update.");
-             }
+        try
+        {
+            if (reminderData == null)
+            {
+                return Error.Validation("Valid reminder data is required for update.");
+            }
 
-             var result = await _reminderRepository.UpdateAsync(reminderData);
+            var result = await _reminderRepository.UpdateAsync(reminderData);
 
-             if (!result.IsError)
-             {
-                 return true;
-             }
+            if (!result.IsError)
+            {
+                return true;
+            }
 
-             return result.Error;
-         }
-         catch (Exception ex)
-         {
-             _logger.LogError(ex, "An error occurred while updating a reminder.");
-             return Error.Unexpected();
-         }
+            return result.Error;
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "An error occurred while updating a reminder.");
+            return Error.Unexpected();
+        }
     }
 
     /// <summary>

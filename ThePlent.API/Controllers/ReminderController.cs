@@ -9,7 +9,7 @@ namespace ThePlant.API.Controllers
     /// API controller for managing reminders.
     /// </summary>
     [ApiController]
-    [Route("api/[controller]")] 
+    [Route("api/[controller]")]
     [Authorize]
     public class RemindersController : ControllerBase
     {
@@ -40,10 +40,10 @@ namespace ThePlant.API.Controllers
 
             var result = await _remindersService.MarkAsDone(userId, id);
 
-            
+
             if (!result.IsError)
             {
-                return NoContent(); 
+                return NoContent();
             }
             return BadRequest(result.Error);
         }
@@ -57,17 +57,17 @@ namespace ThePlant.API.Controllers
         [HttpPost("{id}/importtocalendar")]
         public async Task<ActionResult> ImportToCalendar(Guid id, [FromBody] ImportToCalendarRequest importRequest)
         {
-            if (importRequest == null )
+            if (importRequest == null || importRequest.UserId.Equals(Guid.Empty))
             {
                 return BadRequest("Valid user ID is required for importing to calendar.");
             }
 
             var result = await _remindersService.ImportToCalendar(importRequest.UserId, id, importRequest.CalendarId);
 
-            
+
             if (!result.IsError)
             {
-                return Ok("Reminder imported to calendar successfully."); 
+                return Ok("Reminder imported to calendar successfully.");
             }
             return BadRequest(result.Error);
         }
@@ -87,7 +87,7 @@ namespace ThePlant.API.Controllers
 
             var result = await _remindersService.GetUserReminders(userId);
 
-            
+
             if (!result.IsError)
             {
                 return Ok(result.Value);
@@ -103,14 +103,14 @@ namespace ThePlant.API.Controllers
         [HttpPost]
         public async Task<ActionResult<Reminder>> CreateReminder([FromBody] Reminder reminderData)
         {
-            if (reminderData == null )
+            if (reminderData == null)
             {
                 return BadRequest("Valid reminder data with a user ID is required.");
             }
 
             var result = await _remindersService.CreateReminder(reminderData);
 
-            
+
             if (!result.IsError)
             {
                 return Ok(result.Value);
@@ -119,22 +119,15 @@ namespace ThePlant.API.Controllers
         }
 
         /// <summary>
-        /// Deletes a reminder by its identifier for a user.
+        /// Deletes a reminder by its identifier.
         /// </summary>
         /// <param name="id">The identifier of the reminder to delete (from route).</param>
-        /// <param name="userId">The identifier of the user (from body).</param>
         /// <returns>An ActionResult indicating success or failure.</returns>
         [HttpDelete("{id}")]
-        public async Task<ActionResult> DeleteReminder(Guid id, [FromBody] Guid userId)
+        public async Task<ActionResult> DeleteReminder(Guid id)
         {
-            if (userId.Equals(Guid.Empty))
-            {
-                return BadRequest("Valid user ID is required.");
-            }
+            var result = await _remindersService.DeleteReminder(id);
 
-            var result = await _remindersService.DeleteReminder(userId, id);
-
-            
             if (!result.IsError)
             {
                 return NoContent();
@@ -158,7 +151,7 @@ namespace ThePlant.API.Controllers
 
             var result = await _remindersService.GetUpcomingReminders(userId, timeframeInDays);
 
-            
+
             if (!result.IsError)
             {
                 return Ok(result.Value);
@@ -174,14 +167,14 @@ namespace ThePlant.API.Controllers
         [HttpPut]
         public async Task<ActionResult> UpdateReminder([FromBody] Reminder reminderData)
         {
-            if (reminderData == null )
+            if (reminderData == null)
             {
                 return BadRequest("Valid reminder data with ID and User ID is required for update.");
             }
 
             var result = await _remindersService.UpdateReminder(reminderData);
 
-            
+
             if (!result.IsError)
             {
                 return NoContent();
