@@ -41,6 +41,23 @@ namespace ThePlant.API.Controllers
             return BadRequest(result.Error);
         }
 
+        [HttpPut("{userPlantId}")] // Added Update endpoint
+        public async Task<ActionResult<UserPlant>> UpdateUserPlant(Guid userPlantId, [FromBody] UserPlant userPlant)
+        {
+            if (userPlant == null)
+                return BadRequest("UserPlant data is required.");
+
+            if (userPlantId != userPlant.UserPlantId)
+                return BadRequest("UserPlant ID in URL does not match ID in body.");
+
+            var result = await _userPlantService.UpdateUserPlant(userPlant);
+
+            if (!result.IsError)
+                return Ok(result.Value);
+
+            return BadRequest(result.Error);
+        }
+
         [HttpDelete("{userPlantId}")]
         public async Task<ActionResult> DeleteUserPlant(Guid userPlantId)
         {

@@ -56,6 +56,41 @@ namespace ThePlant.API.Services.Realisations
             }
         }
 
+        public async Task<Result<UserPlant>> UpdateUserPlant(UserPlant userPlant) // Added Update method implementation
+        {
+            try
+            {
+                if (userPlant == null)
+                    return Error.Validation("UserPlant data cannot be null.");
+
+                var existingUserPlantResult = await _userPlantRepository.GetSingleAsync<UserPlant>(up => up.UserPlantId == userPlant.UserPlantId);
+
+                if (existingUserPlantResult.IsError)
+                    return existingUserPlantResult.Error;
+
+                if (existingUserPlantResult.Value == null)
+                    return Error.NotFound($"UserPlant with ID {userPlant.UserPlantId} not found.");
+
+                // Update the existing entity with the new values
+                // You might need to manually map properties or use a library like AutoMapper
+                // For simplicity, directly update the properties if you have a full entity
+                // If IGenericRepository.UpdateAsync expects the full entity, you'd update existingUserPlantResult.Value
+                // For example: existingUserPlantResult.Value.SomeProperty = userPlant.SomeProperty;
+
+                var updateResult = await _userPlantRepository.UpdateAsync(userPlant);
+
+                if (!updateResult.IsError)
+                    return updateResult.Value;
+
+                return updateResult.Error;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error while updating user plant.");
+                return Error.Unexpected();
+            }
+        }
+
         public async Task<Result<bool>> DeleteUserPlant(Guid userPlantId)
         {
             try
