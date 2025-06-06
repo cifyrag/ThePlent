@@ -41,7 +41,7 @@ namespace ThePlant.API.Controllers
             return BadRequest(result.Error);
         }
 
-        [HttpPut("{userPlantId}")] // Added Update endpoint
+        [HttpPut()] // Added Update endpoint
         public async Task<ActionResult<UserPlant>> UpdateUserPlant([FromBody] UserPlant userPlant)
         {
             if (userPlant == null)
